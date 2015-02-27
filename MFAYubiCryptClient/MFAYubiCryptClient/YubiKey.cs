@@ -16,6 +16,8 @@ namespace MFAYubiCryptClient
 
             Console.WriteLine(filename);
 
+            Console.WriteLine("Requesting Yubikey authentification. Please press your Yubikey within the next 15 seconds.");
+
             var startInfo = new ProcessStartInfo
             {
                 FileName = filename,
