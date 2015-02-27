@@ -1,0 +1,11 @@
+/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/obj/Release/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/bin/Release/MFAYubiCryptServer.exe.config
+/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/bin/Release/MFAYubiCryptServer.exe.mdb
+/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/bin/Release/MFAYubiCryptServer.exe
+/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/obj/Release/MFAYubiCryptServer.exe
+/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/obj/Release/MFAYubiCryptServer.exe.mdb
+/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/bin/Release/Nancy.dll
+/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/bin/Release/Nancy.Hosting.Self.dll
+/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/bin/Release/MySql.Data.dll
+/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/bin/Release/Autofac.dll
+/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/bin/Release/Nancy.Bootstrappers.Autofac.dll

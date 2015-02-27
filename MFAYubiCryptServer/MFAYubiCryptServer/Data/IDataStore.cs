@@ -1,9 +1,6 @@
-﻿using System;
-
-namespace MFAYubiCryptServer
-{
-	public interface IDataStore
-	{
+﻿namespace MFAYubiCryptServer {
+	public interface IDataStore {
+		UserEntity GetUserById(uint id);
 	}
 }
 

@@ -1,9 +1,8 @@
-﻿using System;
+﻿namespace MFAYubiCryptServer {
+	public interface IChallengeBL {
 
-namespace MFAYubiCryptServer
-{
-	public interface IChallengeBL
-	{
+		//--- Methods ---
+		ChallengeEntity GetChallengeForUserId(int id);
 	}
 }
 

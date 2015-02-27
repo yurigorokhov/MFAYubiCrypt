@@ -1,11 +1,9 @@
-﻿using System;
+﻿namespace MFAYubiCryptServer {
+	public class ChallengeBL : IChallengeBL {
 
-namespace MFAYubiCryptServer
-{
-	public class ChallengeBL
-	{
-		public ChallengeBL ()
-		{
+		//--- Methods ---
+		public ChallengeEntity GetChallengeForUserId(int id) {
+			return new ChallengeEntity (123, "somechallenge");
 		}
 	}
 }

@@ -1,11 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MFAYubiCryptServer", "MFAYubiCryptServer\MFAYubiCryptServer.shproj", "{B4802361-13CD-414B-A09E-3C33C5D4015E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MFAYubiCryptServer", "MFAYubiCryptServer\MFAYubiCryptServer.csproj", "{CBBEB730-B437-451E-BB2F-47A0B0AC1373}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|Any CPU = Release|Any CPU
+		Debug|Any CPU = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CBBEB730-B437-451E-BB2F-47A0B0AC1373}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBBEB730-B437-451E-BB2F-47A0B0AC1373}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBBEB730-B437-451E-BB2F-47A0B0AC1373}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBBEB730-B437-451E-BB2F-47A0B0AC1373}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = None
+		$1.ResourceNamePolicy = FileFormatDefault
 	EndGlobalSection
 EndGlobal

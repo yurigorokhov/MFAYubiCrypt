@@ -1,3 +1,4 @@
 *~
-*/bin
-*/obj
+MFAYubiCryptServer/MFAYubiCryptServer/bin/*
+MFAYubiCryptServer/MFAYubiCryptServer/obj/*
+
