@@ -1,8 +1,18 @@
-﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MFAYubiCryptServer/MyClass.cs">
+﻿<Properties StartupItem="MFAYubiCryptServer/MFAYubiCryptServer.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="MFAYubiCryptServer/Main.cs">
     <Files>
-      <File FileName="MFAYubiCryptServer/MyClass.cs" Line="22" Column="22" />
+      <File FileName="MFAYubiCryptServer/Data/MysqlDataStore.cs" Line="1" Column="1" />
+      <File FileName="MFAYubiCryptServer/Bootstrapper.cs" Line="1" Column="1" />
+      <File FileName="MFAYubiCryptServer/Logic/ChallengeBL.cs" Line="1" Column="1" />
+      <File FileName="MFAYubiCryptServer/Logic/IChallengeBL.cs" Line="1" Column="1" />
+      <File FileName="MFAYubiCryptServer/Entities/ChallengeEntity.cs" Line="1" Column="1" />
+      <File FileName="MFAYubiCryptServer/Entities/UserEntity.cs" Line="1" Column="1" />
+      <File FileName="MFAYubiCryptServer/Main.cs" Line="25" Column="25" />
+      <File FileName="MFAYubiCryptServer/Data/IDataStore.cs" Line="1" Column="1" />
+      <File FileName="MFAYubiCryptServer/Logic/IUserBL.cs" Line="1" Column="1" />
+      <File FileName="MFAYubiCryptServer/Logic/UserBL.cs" Line="1" Column="1" />
+      <File FileName="MFAYubiCryptServer/YubiCryptService.cs" Line="14" Column="14" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
