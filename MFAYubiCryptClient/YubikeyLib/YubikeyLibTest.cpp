@@ -115,27 +115,26 @@ int _tmain(int argc, char *argv[])
         printf("\nSelect a..o > ");
 		*/
 
-	for (i = 0; i < 5; i=i+2) printf("%c", argv[1][i]);
+	//for (i = 0; i < 5; i=i+2) printf("%c", argv[1][i]);
 		//printf("%s", argv[1]);
 
+	//printf("\n%d", sizeof(argv[1]));
+
 	yk.openKey();
-	char *cha = "m";
 
-       
-
-                memcpy(buffer, "Sample #2", 9);
+				memcpy(buffer, argv[1], 9);
                 printRetcode(rc = yk.writeChallengeBegin(targetSlot, YKLIB_CHAL_HMAC, buffer, 9));
                 
                 if (rc == YKLIB_OK) {
 
                     // Wait for response completion. This may take a while if a button acknowledgement is requested
 
-                    printf("\nPress any key to abort pending request\n");
+                    //printf("\nPress any key to abort pending request\n");
 
                     for (;;) {
                         rc = yk.waitForCompletion(YKLIB_MAX_CHAL_WAIT, buffer, SHA1_DIGEST_SIZE, &timerVal);
                         if (rc != YKLIB_TIMER_WAIT) break;
-                        printf("%d \r", timerVal);
+                        //printf("%d \r", timerVal);
 
                         // Throttling can be added here if desired
 
@@ -149,9 +148,11 @@ int _tmain(int argc, char *argv[])
                     }
                         
                     if (rc == YKLIB_OK) {
-                        printf("\nHMAC-SHA1 = ");
+                        //printf("\nHMAC-SHA1 = ");
+						printf("\n");
                         for (i = 0; i < SHA1_DIGEST_SIZE; i++) printf("%02x", buffer[i]);
-                        if (!memcmp(buffer, nistResp, sizeof(nistResp))) printf(" = NIST response");
+						//printf("\n");
+						if (!memcmp(buffer, nistResp, sizeof(nistResp))) printf("");// = NIST response");
                     } else
                         printRetcode(rc);
                 } else
