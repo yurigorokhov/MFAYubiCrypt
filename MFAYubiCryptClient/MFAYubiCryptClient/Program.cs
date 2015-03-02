@@ -13,6 +13,9 @@ namespace MFAYubiCryptClient
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Press any key to ask the server if there is a challenge to solve");
+            Console.ReadKey();
+
            string Url = "http://ec2-52-0-229-227.compute-1.amazonaws.com:8888/api/challenge/123";
 
            using (WebClient wc = new WebClient())
@@ -25,6 +28,8 @@ namespace MFAYubiCryptClient
 
                 if(jsonChallenge != null)
                 {
+                    Console.WriteLine("Challenge successfully received. Please press yubikey to provide response and send back to server.");
+
                     string response = YubiKey.GetResponse(jsonChallenge.Challenge);
 
                     if (!(response == ""))
