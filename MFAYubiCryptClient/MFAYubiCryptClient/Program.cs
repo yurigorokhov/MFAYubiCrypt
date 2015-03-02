@@ -16,13 +16,13 @@ namespace MFAYubiCryptClient
             Console.WriteLine("Press any key to ask the server if there is a challenge to solve");
             Console.ReadKey();
 
-           string Url = "http://ec2-52-0-229-227.compute-1.amazonaws.com:8888/api/challenge/123";
+           string url = "http://ec2-52-0-229-227.compute-1.amazonaws.com:8888/api/challenge/123";
 
            using (WebClient wc = new WebClient())
            {
 
                var jsonString =
-                   wc.DownloadString(Url);
+                   wc.DownloadString(url);
 
                 var jsonChallenge = Newtonsoft.Json.JsonConvert.DeserializeObject<ChallengeObj>(jsonString);
 
@@ -32,10 +32,10 @@ namespace MFAYubiCryptClient
 
                     string response = YubiKey.GetResponse(jsonChallenge.Challenge);
 
-                    if (!(response == ""))
+                    if (response != "")
                     {
                        // wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                        string HtmlResult = wc.UploadString(Url, response);
+                        var htmlResult = wc.UploadString(url, response);
                     }
                     else
                     {
