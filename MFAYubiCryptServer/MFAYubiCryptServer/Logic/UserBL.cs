@@ -1,4 +1,6 @@
-﻿namespace MFAYubiCryptServer {
+﻿using System.Collections.Generic;
+
+namespace MFAYubiCryptServer {
 	public class UserBL : IUserBL {
 
 		//--- Fields ---
@@ -12,6 +14,14 @@
 		//--- Methods ---
 		public UserEntity GetUserById (uint id) {
 			return _dataStore.GetUserById (id);
+		}
+
+		public IEnumerable<UserEntity> GetUsers() {
+			return _dataStore.GetUsers ();
+		}
+
+		public IEnumerable<UserEntity> GetUsersByName(string[] names) {
+			return _dataStore.GetUsersByName (names);
 		}
 	}
 }

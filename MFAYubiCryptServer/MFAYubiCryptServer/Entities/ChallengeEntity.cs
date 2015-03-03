@@ -1,15 +1,13 @@
-﻿namespace MFAYubiCryptServer {
+﻿using System;
+
+namespace MFAYubiCryptServer {
 	public class ChallengeEntity {
 
-		//--- Constructors ---
-		public ChallengeEntity (uint id, string challenge) {
-			Id = id;
-			Challenge = challenge;
-		}
-
-		//-- Fields ---
-		public readonly uint Id;
-		public readonly string Challenge;
+		//-- Properties ---
+		public Guid Id { get; set; }
+		public string Challenge { get; set; }
+		public uint UserId { get; set; }
+		public TimeSpan Ttl { get; set; }
 	}
 }
 
