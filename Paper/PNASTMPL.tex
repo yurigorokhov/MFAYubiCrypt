@@ -166,7 +166,7 @@ Lars Noergaard Nielsen\affil{1}{University of California, San Diego}}
 %----------------------------------------------------------------------------------------
 
 \begin{abstract}
-Proposal of a system to authenticate access to encrypted files using both Multifactor and multiple people, across different locations.
+Proposal of a system to authenticate access to encrypted files using both Multifactor and multiple people, across different locations. Making sure that files are only accessible with the consent of all involved participants.
 \end{abstract}
 
 %------------------------------------------------
@@ -210,7 +210,14 @@ System Description with figure.
 \caption{Figure caption}\label{placeholder}
 \end{figure}
 
+\section{Multifactor authorization: Yubikey}
 
+In this work we choose Yubikey for Multifactor authentication for several reasons: It provides a simple procedure for the user - only a physical touch on the device is neccesary to allow the device to respond to the presented challenge.
+
+
+\section{Encryption scheme}
+
+This sections presents the encryption scheme used, to ensure that decryption of the file is only possible when responses from all participants and their Yubikey challenges are retrieved.
 
 
 %------------------------------------------------
