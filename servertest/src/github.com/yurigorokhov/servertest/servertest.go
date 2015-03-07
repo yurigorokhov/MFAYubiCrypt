@@ -53,6 +53,8 @@ func main() {
 		printErrorAndExit("Could not parse numusers as number")
 	}
 
+	fmt.Printf("Starting test with %v users on %v:%v\n", numUsers, hostname, port)
+
 	var usersById = make(map[int]*User)
 	var secretsById = make(map[int]string)
 	users := make([]*User, numUsers)

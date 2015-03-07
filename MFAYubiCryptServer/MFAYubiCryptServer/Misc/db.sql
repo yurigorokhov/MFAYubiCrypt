@@ -3,7 +3,7 @@ USE yubicrypt;
 
 CREATE TABLE IF NOT EXISTS users (
 	user_id INT PRIMARY KEY AUTO_INCREMENT, 
-    user_name VARCHAR(25),
+    user_name VARCHAR(80),
 	user_secret VARCHAR(80)
 ) ENGINE=INNODB;
 
