@@ -8,6 +8,7 @@ namespace MFAYubiCryptServer {
 		public string Challenge { get; set; }
 		public uint UserId { get; set; }
 		public TimeSpan Ttl { get; set; }
+		public uint EncryptionId { get; set; }
 	}
 }
 

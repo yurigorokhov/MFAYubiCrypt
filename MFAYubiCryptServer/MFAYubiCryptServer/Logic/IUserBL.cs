@@ -7,6 +7,7 @@ namespace MFAYubiCryptServer {
 		UserEntity GetUserById (uint id);
 		IEnumerable<UserEntity> GetUsers ();
 		IEnumerable<UserEntity> GetUsersByName(string[] names);
+		UserEntity CreateUser (string name, string secret);
 	}
 }
 

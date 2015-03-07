@@ -29,7 +29,14 @@ namespace MFAYubiCryptServer {
 			}
 		}
 
-		public void RespondToChallenge(string challengeId, string response) {
+		public string GetChallengeResponseById(string id) {
+			using (var client = _redisManager.GetClient ()) {
+				return client.Get<string> (string.Format ("response_{0}", id));
+			}
+		}
+
+		public void RespondToChallenge(string challengeId, byte[] response) {
+			var key = response.Aggregate ("", (s, e) => s + String.Format ("{0:x2}", e), s => s);
 			using (var client = _redisManager.GetClient ()) {
 				var challenges = client.As<ChallengeEntity> ();
 				var challenge = challenges.GetById (challengeId);
@@ -37,8 +44,7 @@ namespace MFAYubiCryptServer {
 					return;
 				}
 				challenges.DeleteById (challengeId);
-
-				//TODO: unlock here
+				client.Set (string.Format ("response_{0}", challengeId), string.Format("{0}_{1}", challenge.EncryptionId, key));
 			}
 		}
 	}

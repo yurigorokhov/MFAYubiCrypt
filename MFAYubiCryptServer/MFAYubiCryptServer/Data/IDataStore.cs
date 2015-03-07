@@ -8,6 +8,8 @@ namespace MFAYubiCryptServer {
 		IEnumerable<UserEntity> GetUsersByName(string[] names);
 		void CreateNewEncryptions(IEnumerable<EncryptionEntity> encryptionEntities);
 		IEnumerable<EncryptionEntity> GetByEncryptionId (string encryptId);
+		EncryptionEntity GetById(string id);
+		UserEntity CreateUser (UserEntity user);
 	}
 }
 

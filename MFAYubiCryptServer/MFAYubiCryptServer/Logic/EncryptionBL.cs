@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.IO;
+using ServiceStack.Redis;
 
 namespace MFAYubiCryptServer {
 	public class EncryptionBL : IEncryptionBL {
@@ -11,11 +12,13 @@ namespace MFAYubiCryptServer {
 		//--- Fields ---
 		readonly IDataStore _session;
 		readonly IChallengeBL _challengeBL;
+		readonly IRedisClientsManager _redisClients;
 
 		//--- Constructors ---
-		public EncryptionBL (IDataStore session, IChallengeBL challengeBL) {
+		public EncryptionBL (IDataStore session, IChallengeBL challengeBL, IRedisClientsManager redisClients) {
 			_session = session;
 			_challengeBL = challengeBL;
+			_redisClients = redisClients;
 		}
 
 		//--- Methods ---
@@ -39,20 +42,57 @@ namespace MFAYubiCryptServer {
 				return null;
 			}
 			var requestId = Guid.NewGuid ();
+			var challengeIds = new List<string> ();
 			foreach(var entity in encryptionEntities) {
+				var id = Guid.NewGuid ();
+				challengeIds.Add (id.ToString ());
 				_challengeBL.CreateChallenge (new ChallengeEntity { 
-					Id = Guid.NewGuid (),
+					Id = id,
 					Challenge = GenerateChallenge (encryptId, entity.UserId),
 					UserId = entity.UserId, 
-					Ttl = TimeSpan.FromHours(1)
+					Ttl = TimeSpan.FromHours(1),
+					EncryptionId = entity.Id
 				});
+			}
+
+			// store requestId in memcache with the keys that must be decoded
+			using (var client = _redisClients.GetClient ()) {
+				client.Set(string.Format("request_{0}", requestId), string.Join(",", challengeIds));
 			}
 			return requestId.ToString ();
 		}
 
-		string GenerateChallenge(string encryptionId, uint userId) {
+		public string GetDecryptionKey(string requestId) {
+			var responsesById = new Dictionary<string, string> ();
+			using (var client = _redisClients.GetClient ()) {
 
-			//TODO: add sequence numbers
+				// get the request Id
+				var res = client.Get<string> (string.Format ("request_{0}", requestId));
+				if (res == null) {
+					return null;
+				}
+				var challengeIds = res.Split (new [] { ',' });
+				foreach (var id in challengeIds) {
+					var response = _challengeBL.GetChallengeResponseById (id);
+					if (response == null) {
+						return null;
+					}
+					responsesById [id] = response;
+				}
+			}
+
+			// using the responses decrypt the rows
+			var keys = new List<string> ();
+			foreach (var id in responsesById.Keys) {
+				var encryptionId = responsesById [id].Split (new [] { '_' })[0];
+				var response = responsesById [id].Split (new [] { '_' })[1];
+				var encrypt = _session.GetById (encryptionId);
+				keys.Add(Cryptography.Cryptography.Decrypt (encrypt.EncryptedKey, response).Split(new [] {':'})[0]);
+			}
+			return SHA256 (string.Join (":", keys));
+		}
+
+		string GenerateChallenge(string encryptionId, uint userId) {
 			return SHA256(string.Format("{0}:{1}", encryptionId, userId));
 		}
 

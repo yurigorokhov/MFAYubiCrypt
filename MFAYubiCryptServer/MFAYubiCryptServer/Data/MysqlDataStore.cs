@@ -33,6 +33,13 @@ namespace MFAYubiCryptServer {
 			return UsersFromReader (cmd.ExecuteReader ());
 		}
 
+		public UserEntity CreateUser(UserEntity user) {
+			var cmd = NewCommand ("INSERT INTO users (user_name, user_secret) VALUES (@NAME, @SECRET); SELECT * FROM users WHERE user_name=@NAME;");
+			cmd.Parameters.AddWithValue ("NAME", user.UserName);
+			cmd.Parameters.AddWithValue ("SECRET", user.Secret);
+			return UsersFromReader (cmd.ExecuteReader ()).FirstOrDefault ();
+		}
+
 		public void CreateNewEncryptions(IEnumerable<EncryptionEntity> encryptionEntities) {
 			foreach (var entity in encryptionEntities) {
 				var cmd = NewCommand ("INSERT INTO encrypt_keys (keys_encryption_id, keys_user_id, keys_key_encrypted) VALUES (@ENCRYPTIONID, @USERID, @ENCRYPTEDKEY)");
@@ -47,6 +54,12 @@ namespace MFAYubiCryptServer {
 			var cmd = NewCommand ("SELECT * FROM encrypt_keys WHERE keys_encryption_id = @ID");
 			cmd.Parameters.AddWithValue ("ID", encryptId);
 			return EncryptionEntitiesFromReader (cmd.ExecuteReader ());
+		}
+
+		public EncryptionEntity GetById(string id) {
+			var cmd = NewCommand ("SELECT * FROM encrypt_keys WHERE keys_id = @ID");
+			cmd.Parameters.AddWithValue ("ID", id);
+			return EncryptionEntitiesFromReader (cmd.ExecuteReader ()).FirstOrDefault();
 		}
 
 		MySqlCommand NewCommand(string sql) {

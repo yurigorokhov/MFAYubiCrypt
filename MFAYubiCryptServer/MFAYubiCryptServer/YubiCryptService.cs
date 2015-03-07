@@ -3,6 +3,7 @@ using System.Linq;
 using System;
 using System.Text;
 using Nancy.Extensions;
+using System.IO;
 
 namespace MFAYubiCryptServer {
 	public class YubyCryptService : Nancy.NancyModule {
@@ -32,11 +33,14 @@ namespace MFAYubiCryptServer {
 				if(challenge == null) {
 					return string.Empty;
 				}
-				return Response.AsJson(new { Id = challenge.Id, challenge = challenge.Challenge });
+				return Response.AsJson(new { Id = challenge.Id, Challenge = challenge.Challenge });
 			};
 
 			Post ["/api/challenge/{responseid}"] = parameters => {
-				_challengeBL.RespondToChallenge(parameters["responseid"], Request.Body.AsString());
+				using (var ms = new MemoryStream()) {
+					Request.Body.CopyTo(ms);
+					_challengeBL.RespondToChallenge(parameters["responseid"], ms.ToArray());
+				}
 				return string.Empty;
 			};
 
@@ -50,6 +54,16 @@ namespace MFAYubiCryptServer {
 				if(user == null) {
 					return HttpStatusCode.NotFound;
 				}
+				return Response.AsJson(new { Id = user.Id, UserName = user.UserName });
+			};
+
+			Post ["api/users"] = _ => {
+				var username = Request.Query.username;
+				var secret = Request.Query.secret;
+				if(string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(secret)) {
+					return HttpStatusCode.BadRequest;
+				}
+				var user = _userBL.CreateUser(username, secret);
 				return Response.AsJson(new { Id = user.Id, UserName = user.UserName });
 			};
 
@@ -68,13 +82,18 @@ namespace MFAYubiCryptServer {
 				return Response.AsJson(new { EncryptionId = info.EncryptionId, ShaKeys = info.ShaKeys });
 			};
 
-			Get ["/api/decrypt/{encryptid}"] = parameters => {
+			Post ["/api/decrypt/{encryptid}"] = parameters => {
 				var encryptId = parameters ["encryptid"];
 				string requestId = _encryptionBL.Decrypt (encryptId);
 				if (null == requestId) {
 					return HttpStatusCode.BadRequest;
 				}
 				return Response.AsJson (new { RequestId = requestId });
+			};
+
+			Get ["/api/decrypt/{requestid}"] = parameters => {
+				var requestId = parameters ["requestid"];
+				return _encryptionBL.GetDecryptionKey (requestId);
 			};
 		}
 	}

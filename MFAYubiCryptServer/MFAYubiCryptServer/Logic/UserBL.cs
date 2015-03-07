@@ -23,6 +23,10 @@ namespace MFAYubiCryptServer {
 		public IEnumerable<UserEntity> GetUsersByName(string[] names) {
 			return _dataStore.GetUsersByName (names);
 		}
+
+		public UserEntity CreateUser(string name, string secret) {
+			return _dataStore.CreateUser(new UserEntity(0, name, secret));
+		}
 	}
 }
 

@@ -6,6 +6,7 @@ namespace MFAYubiCryptServer {
 		//--- Methods ---
 		SetupInfo Setup (IEnumerable<UserEntity> users);
 		string Decrypt(string encryptId);
+		string GetDecryptionKey(string requestId);
 	}
 }
 
