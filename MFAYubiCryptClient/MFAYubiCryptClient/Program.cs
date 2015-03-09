@@ -16,7 +16,7 @@ namespace MFAYubiCryptClient
             Console.WriteLine("Press any key to ask the server if there is a challenge to solve");
             Console.ReadKey();
 
-           string url = "http://ec2-52-0-229-227.compute-1.amazonaws.com:8888/api/challenge/123";
+           string url = "http://ec2-52-0-229-227.compute-1.amazonaws.com:8888/api/challenge/1";
 
            using (WebClient wc = new WebClient())
            {
@@ -50,7 +50,7 @@ namespace MFAYubiCryptClient
 
     class ChallengeObj
     {
-        public int Id;
+        public string Id;
         public string Challenge;
 
     }
