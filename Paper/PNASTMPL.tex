@@ -122,33 +122,9 @@
 %	TITLE AND AUTHORS
 %----------------------------------------------------------------------------------------
 
-\title{Multifactor, multiple people. Authentication approach for unlocking encrypted fies.} % For titles, only capitalize the first letter
+\title{Multifactor, multiple people. Authentication approach for unlocking encrypted files.} % For titles, only capitalize the first letter
 
 %------------------------------------------------
-
-%% Enter authors via the \author command.  
-%% Use \affil to define affiliations.
-%% (Leave no spaces between author name and \affil command)
-
-%% Note that the \thanks{} command has been disabled in favor of
-%% a generic, reserved space for PNAS publication footnotes.
-
-%% \author{<author name>
-%% \affil{<number>}{<Institution>}} One number for each institution.
-%% The same number should be used for authors that
-%% are affiliated with the same institution, after the first time
-%% only the number is needed, ie, \affil{number}{text}, \affil{number}{}
-%% Then, before last author ...
-%% \and
-%% \author{<author name>
-%% \affil{<number>}{}}
-
-%% For example, assuming Garcia and Sonnery are both affiliated with
-%% Universidad de Murcia:
-%% \author{Roberta Graff\affil{1}{University of Cambridge, Cambridge,
-%% United Kingdom},
-%% Javier de Ruiz Garcia\affil{2}{Universidad de Murcia, Bioquimica y Biologia
-%% Molecular, Murcia, Spain}, \and Franklin Sonnery\affil{2}{}}
 
 \author{Yuri Gorokhov\affil{1}{University of California, San Diego},
 Lars Noergaard Nielsen\affil{1}{University of California, San Diego}}
@@ -175,15 +151,6 @@ Proposal of a system to authenticate access to encrypted files using both Multif
 
 %------------------------------------------------
 
-%% Optional for entering abbreviations, separate the abbreviation from
-%% its definition with a comma, separate each pair with a semicolon:
-%% for example:
-%% \abbreviations{SAM, self-assembled monolayer; OTS,
-%% octadecyltrichlorosilane}
-
-% \abbreviations{}
-%\abbreviations{SAM, self-assembled monolayer; OTS, octadecyltrichlorosilane}
-
 %----------------------------------------------------------------------------------------
 %	PUBLICATION CONTENT
 %----------------------------------------------------------------------------------------
@@ -193,21 +160,38 @@ Proposal of a system to authenticate access to encrypted files using both Multif
 
 \section{Introduction}
 
-\dropcap{C}ontrolling who has access to files is often a requirement in industry and various other contexts. Systems for dealing with information that only is accessible with multiple peoples consent is therefore interesting to investigate. Software for file access control purposes include Dell Identity Manager\cite{CLAcha1}, User Lock Access Manager \cite{UserLock} and native OS support such as an Access Control List. These systems is not adressing security as such, as not providing encryption capabilities. Common for these solutions is that file access is administered centrally by a administrator. We propose an approach were users actively set file permissions by agreeing to encrypt files by their common consent, only allowing access to these files when all parties has responded to the access request. The latter step is additionally secured by Mulfifactor Authentication.
+\dropcap{C}ontrolling who has access to files is often a requirement in industry and various other contexts. Systems for dealing with information that only is accessible with multiple people's consent is therefore interesting to investigate. Software for file access control purposes include Dell Identity Manager\cite{CLAcha1}, User Lock Access Manager \cite{UserLock} and native OS support such as an Access Control List. These systems is not addressing security as such, as not providing encryption capabilities. Common for these solutions is that file access is administered centrally by a administrator. We propose an approach were users actively set file permissions by agreeing to encrypt files by their common consent, only allowing access to these files when all parties have responded to the access request. The latter step is additionally secured by MultiFactor Authentication.
+
+\section{Yubikey}
+TODO
+
+\section{Previous work}
+We based our model on a proposed hard drive encryption mechanism published on the Yubikey website\cite{YubikeyEncryption}. In their proposed configuration the Yubikey is programmed with a secret key after which it is able to perform HMAC-SHA1 encryption. The device is said to be operating in Challenge-Response mode since you can send it a challenge and it will respond with the HMAC-SHA1 encryption of the challenge with the secret key. This is depicted in figure 1.
 
 
+\begin{figure}
+\centerline{\includegraphics[width=\linewidth]{ChallengeResponseFigure.pdf}}
+\caption{Challenge-Response mode of Yubikey.}\label{systemfigure}
+\end{figure}
 
+Figure 2 shows how this mode is used for encrypting a local hard drive. The hard drive is encrypted with a Drive Encryption Key (DEK) which is stored in a table along with the secret. Both are encrypted using AES. The key used for the encryption is shown in Figure 2. Once the user enters his password a challenge is generated. The challenge consists of the password itself and a sequence number (Seq) that is also stored in the table. This challenge is sent to the Yubikey, whose response allows us to decrypt the DEK and the secret. The hard drive can now be decrypted. After decryption the DEK is re-encrypted with a new sequence number and the secret.
 
+\begin{figure}
+\centerline{\includegraphics[width=\linewidth]{HardDriveEncryptionFigure.pdf}}
+\caption{Local hard drive encryption configuration.}\label{systemfigure}
+\end{figure}
 
 %------------------------------------------------
 
 \section{System Description}
 
-System Description with figure.
+The proposed system is composed of a user client, harddrive client and a verification server. 
 
-\begin{figure}[h]
-\centerline{\includegraphics[width=0.4\linewidth]{placeholder.jpg}}
-\caption{Figure caption}\label{placeholder}
+A benefit from this central point of contol is that the server can deny access to a file, even though participants grant access, which might be useful in some access schemes.
+
+\begin{figure}
+\centerline{\includegraphics[width=\linewidth]{SystemFigure.pdf}}
+\caption{System components and interaction. 4 major steps to grant access.}\label{systemfigure}
 \end{figure}
 
 \section{Multifactor authorization: Yubikey}
@@ -219,18 +203,17 @@ In this work we choose Yubikey for Multifactor authentication for several reason
 
 This sections presents the encryption scheme used, to ensure that decryption of the file is only possible when responses from all participants and their Yubikey challenges are retrieved.
 
-
 %------------------------------------------------
 
 \section{Discussion}
 
 Discussion on strenghts and weaknesses of the solution
 
-
-
 %----------------------------------------------------------------------------------------
 %	ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
+
+\pagebreak
 
 \begin{acknowledgments}
 This work was supported by..
@@ -239,31 +222,6 @@ This work was supported by..
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
-
-%% PNAS does not support submission of supporting .tex files such as BibTeX.
-%% Instead all references must be included in the article .tex document. 
-%% If you currently use BibTeX, your bibliography is formed because the 
-%% command \verb+\bibliography{}+ brings the <filename>.bbl file into your
-%% .tex document. To conform to PNAS requirements, copy the reference listings
-%% from your .bbl file and add them to the article .tex file, using the
-%% bibliography environment described above.  
-
-%%  Contact pnas@nas.edu if you need assistance with your
-%%  bibliography.
-
-% Sample bibliography item in PNAS format:
-%% \bibitem{in-text reference} comma-separated author names up to 5,
-%% for more than 5 authors use first author last name et al. (year published)
-%% article title  {\it Journal Name} volume #: start page-end page.
-%% ie,
-% \bibitem{Neuhaus} Neuhaus J-M, Sitcher L, Meins F, Jr, Boller T (1991) 
-% A short C-terminal sequence is necessary and sufficient for the
-% targeting of chitinases to the plant vacuole. 
-% {\it Proc Natl Acad Sci USA} 88:10362-10366.
-
-
-%% Enter the largest bibliography number in the facing curly brackets
-%% following \begin{thebibliography}
 
 \begin{thebibliography}{10}
 
@@ -274,66 +232,13 @@ http://www.isdecisions.com/lp/userlock/userlock-windows-network-security.htm?gcl
 \bibitem{CLAcha1}
 http://software.dell.com/products/identity-manager-data-governance/
 
+\bibitem{YubikeyEncryption}
+https://www.yubico.com/applications/disk-encryption/full-disk-encryption/
+
 \end{thebibliography}
 
 %----------------------------------------------------------------------------------------
 
 \end{article}
-
-%----------------------------------------------------------------------------------------
-%	FIGURES AND TABLES
-%----------------------------------------------------------------------------------------
-
-%% Adding Figure and Table References
-%% Be sure to add figures and tables after \end{article}
-%% and before \end{document}
-
-%% For figures, put the caption below the illustration.
-%%
-%% \begin{figure}
-%% \caption{Almost Sharp Front}\label{afoto}
-%% \end{figure}
-
-%% For Tables, put caption above table
-%%
-%% Table caption should start with a capital letter, continue with lower case
-%% and not have a period at the end
-%% Using @{\vrule height ?? depth ?? width0pt} in the tabular preamble will
-%% keep that much space between every line in the table.
-
-%% \begin{table}
-%% \caption{Repeat length of longer allele by age of onset class}
-%% \begin{tabular}{@{\vrule height 10.5pt depth4pt  width0pt}lrcccc}
-%% table text
-%% \end{tabular}
-%% \end{table}
-
-\begin{table}[h]
-\caption{Table caption}\label{sampletable}
-\begin{tabular}{l l l}
-\hline
-\textbf{Treatments} & \textbf{Response 1} & \textbf{Response 2}\\
-\hline
-Treatment 1 & 0.0003262 & 0.562 \\
-Treatment 2 & 0.0015681 & 0.910 \\
-Treatment 3 & 0.0009271 & 0.296 \\
-\hline
-\end{tabular}
-\end{table}
-
-%% For two column figures and tables, use the following:
-
-%% \begin{figure*}
-%% \caption{Almost Sharp Front}\label{afoto}
-%% \end{figure*}
-
-%% \begin{table*}
-%% \caption{Repeat length of longer allele by age of onset class}
-%% \begin{tabular}{ccc}
-%% table text
-%% \end{tabular}
-%% \end{table*}
-
-%----------------------------------------------------------------------------------------
 
 \end{document}
