@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  7 MAR 2015 22:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  9 MAR 2015 10:07
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -288,18 +288,18 @@ LaTeX Warning: Label `systemfigure' multiply defined.
 )
 \openout1 = `PNASTMPL.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 119.
-LaTeX Font Info:    ... okay on input line 119.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 119.
-LaTeX Font Info:    ... okay on input line 119.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 119.
-LaTeX Font Info:    ... okay on input line 119.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 119.
-LaTeX Font Info:    ... okay on input line 119.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 119.
-LaTeX Font Info:    ... okay on input line 119.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 119.
-LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 120.
+LaTeX Font Info:    ... okay on input line 120.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 120.
+LaTeX Font Info:    ... okay on input line 120.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 120.
+LaTeX Font Info:    ... okay on input line 120.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 120.
+LaTeX Font Info:    ... okay on input line 120.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 120.
+LaTeX Font Info:    ... okay on input line 120.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 120.
+LaTeX Font Info:    ... okay on input line 120.
  (/usr/local/texlive/2014/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count126
@@ -314,11 +314,11 @@ LaTeX Font Info:    ... okay on input line 119.
 \makeMPintoPDFobject=\count131
 \everyMPtoPDFconversion=\toks22
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 136.
+LaTeX Font Info:    Try loading font information for U+msa on input line 137.
  (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 136.
+LaTeX Font Info:    Try loading font information for U+msb on input line 137.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -329,7 +329,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: ChallengeResponseFigure.pdf Graphic file (type pdf)
 
 <use ChallengeResponseFigure.pdf>
-Package pdftex.def Info: ChallengeResponseFigure.pdf used on input line 173.
+Package pdftex.def Info: ChallengeResponseFigure.pdf used on input line 178.
 (pdftex.def)             Requested size: 248.25pt x 186.1883pt.
 \figandtabbox1=\box54
 
@@ -337,17 +337,24 @@ Package pdftex.def Info: ChallengeResponseFigure.pdf used on input line 173.
 File: HardDriveEncryptionFigure.pdf Graphic file (type pdf)
 
 <use HardDriveEncryptionFigure.pdf>
-Package pdftex.def Info: HardDriveEncryptionFigure.pdf used on input line 180.
+Package pdftex.def Info: HardDriveEncryptionFigure.pdf used on input line 185.
 (pdftex.def)             Requested size: 248.25pt x 132.37393pt.
 \figandtabbox2=\box55
 
 <SystemFigure.pdf, id=3, 542.025pt x 406.51875pt>
 File: SystemFigure.pdf Graphic file (type pdf)
  <use SystemFigure.pdf>
-Package pdftex.def Info: SystemFigure.pdf used on input line 193.
+Package pdftex.def Info: SystemFigure.pdf used on input line 198.
 (pdftex.def)             Requested size: 248.25pt x 186.1883pt.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 213.
 
-[1
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <8> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 213.
+ [1
 
 {/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./Chall
 engeResponseFigure.pdf> <./HardDriveEncryptionFigure.pdf
@@ -365,8 +372,14 @@ Overfull \vbox (4.31944pt too high) has occurred while \output is active []
 Overfull \vbox (4.31944pt too high) has occurred while \output is active []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 230--231
+Underfull \hbox (badness 10000) in paragraph at lines 262--263
 []\bibbffont http://www.isdecisions.com/lp/userlock/userlock-windows-network-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 271--272
+[]\bibbffont https://www.yubico.com/wp-content/uploads/2012/10/Security-Evaluat
+ion-
  []
 
 [3] (./PNASTMPL.aux)
@@ -375,24 +388,28 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3328 strings out of 493117
- 42626 string characters out of 6135433
- 119297 words of memory out of 5000000
- 6754 multiletter control sequences out of 15000+600000
- 13118 words of font info for 48 fonts, out of 8000000 for 9000
+ 3352 strings out of 493117
+ 43011 string characters out of 6135433
+ 123260 words of memory out of 5000000
+ 6773 multiletter control sequences out of 15000+600000
+ 14287 words of font info for 52 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 49i,7n,37p,914b,237s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><
-/usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></
-usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><
-/usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb><
-/usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></u
-sr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr
-/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb>
-Output written on PNASTMPL.pdf (3 pages, 152506 bytes).
+ 49i,7n,37p,914b,256s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb>
+</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex9.p
+fb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb
+></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></
+usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></u
+sr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></
+usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb></
+usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></us
+r/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/
+local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/lo
+cal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb>
+Output written on PNASTMPL.pdf (3 pages, 193999 bytes).
 PDF statistics:
- 76 PDF objects out of 1000 (max. 8388607)
- 54 compressed objects within 1 object stream
+ 92 PDF objects out of 1000 (max. 8388607)
+ 66 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

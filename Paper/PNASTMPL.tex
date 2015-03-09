@@ -67,6 +67,7 @@
 % [truetex], [tcidvi], [vtex], [oztex], [textures], [xetex]
 
 \usepackage{graphicx}
+\usepackage{amsmath}
 
 %------------------------------------------------
 % OPTIONAL POSTSCRIPT FONT FILES
@@ -189,9 +190,9 @@ Figure 2 shows how this mode is used for encrypting a local hard drive. The hard
 
 \section{System Description}
 
-The proposed system is composed of a user client, harddrive client and a verification server. 
+The proposed system is composed of a user client, hard drive client and a verification server. 
 
-A benefit from this central point of contol is that the server can deny access to a file, even though participants grant access, which might be useful in some access schemes.
+A benefit from this central point of control is that the server can deny access to a file, even though participants grant access, which might be useful in some access schemes.
 
 \begin{figure}
 \centerline{\includegraphics[width=\linewidth]{SystemFigure.pdf}}
@@ -203,11 +204,42 @@ A benefit from this central point of contol is that the server can deny access t
 
 This sections presents the encryption scheme used, to ensure that decryption of the file is only possible when responses from all participants and their Yubikey challenges are retrieved.
 
+\section{Security Evaluation}
+We evaluate the security of the proposed system by considering various attack vectors. We leave the evaluation of specific encryption and hashing mechanisms to other work, and assume them to be computationally unreasonably hard to break. We also do not evaluate the security implications of specifically using the Yubikey product, Yubico provides a detailed evaluation on their website \cite{YubikeySecurity}. 
+
+\subsection{Server Attacks}
+In designing the server side component we took deliberate care not to expose enough information to compromise the security of the hard drive at any point in the future. The database on the server stores the following items:
+\begin{itemize}
+	\item Yubikey secret of each user (AES encrypted)
+	\item Key that corresponds to the user's share of an encrypted hard drive (AES encrypted)
+	\item Mapping of hard drive to users who belong to the encryption
+	\item Sequence number used for obfuscation
+\end{itemize}
+In order to decrypt the secret or the key, the attacker would need to gain access to the user's secret in order to be able to generate the decryption key via a HMAC-SHA1 algorithm. While the server does not provide any additional protection if the user secret has been compromised, it does not make matters any worse. Furthermore all users of a particular hard drive would need to be compromised in this way for a successful decryption. This is analogous to finding out everyone's password, which is stored on their YubiKey device.
+
+\subsection{Network Attacks}
+All communications are assumed to be SSL encrypted in a production environment to provide the first layer of security. With that in mind, let us consider what data is sent over the network during the decryption process.
+
+\subsubsection{Between Client and Server}
+When the client initiates a decryption, it sends over an \textbf{encryptionId} and a challenge. The encryptionId which is used to identify the hard drive and associated users. The challenge is a SHA hash of the encryptionId, a sequence number (seq) and an optional password. Finally the server will answer with a response.
+\begin{itemize}
+	\item encryptionId
+	\item challenge \( \Rightarrow  SHA(encryptionId, seq, password) \)
+	\item response \( \Rightarrow HMACSHA1(challenge, SHA( \sum Keys)) \)
+\end{itemize}
+The challenge and the response leak no data, nor are they useful in a future decryption attempt since the sequence number will have changed. The encryptionId is in itself not of much use, however if somebody had also access to the server database, they would be able to find out which users are participating in a decryption. Even then, they would still need to attain the secret's of all the users to be able to decrypt their keys.
+
+\subsubsection{Between Server and Users}
+Between the server and users, only challenge and response are exchanged over the wire. These change every request due to per-user sequence numbers thus intercepting these would not lead to future vulnerabilities.
+
+\subsection{Hard Drive host attacks}
+\subsection{Client User Attacks}
+
 %------------------------------------------------
 
 \section{Discussion}
 
-Discussion on strenghts and weaknesses of the solution
+Discussion on strengths and weaknesses of the solution
 
 %----------------------------------------------------------------------------------------
 %	ACKNOWLEDGEMENTS
@@ -234,6 +266,9 @@ http://software.dell.com/products/identity-manager-data-governance/
 
 \bibitem{YubikeyEncryption}
 https://www.yubico.com/applications/disk-encryption/full-disk-encryption/
+
+\bibitem{YubikeySecurity}
+https://www.yubico.com/wp-content/uploads/2012/10/Security-Evaluation-v2.0.1.pdf
 
 \end{thebibliography}
 
