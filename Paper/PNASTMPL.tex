@@ -108,11 +108,11 @@
 
 %% For PNAS Only:
 \contributor{Submitted to Proceedings of the National Academy of Sciences of the United States of America}
-\url{www.pnas.org/cgi/doi/10.1073/pnas.0709640104}
-\copyrightyear{2008}
-\issuedate{Issue Date}
-\volume{Volume}
-\issuenumber{Issue Number}
+%\url{www.pnas.org/cgi/doi/10.1073/pnas.0709640104}
+\copyrightyear{2015}
+\issuedate{03-16-2015}
+\volume{1}
+\issuenumber{1}
 
 %----------------------------------------------------------------------------------------
 
@@ -162,8 +162,12 @@ Proposal of a system to authenticate access to encrypted files using both Multif
 
 \dropcap{C}ontrolling who has access to files is often a requirement in industry and various other contexts. Systems for dealing with information that only is accessible with multiple people's consent is therefore interesting to investigate. Software for file access control purposes include Dell Identity Manager\cite{CLAcha1}, User Lock Access Manager \cite{UserLock} and native OS support such as an Access Control List. These systems is not addressing security as such, as not providing encryption capabilities. Common for these solutions is that file access is administered centrally by a administrator. We propose an approach were users actively set file permissions by agreeing to encrypt files by their common consent, only allowing access to these files when all parties have responded to the access request. The latter step is additionally secured by MultiFactor Authentication.
 
-\section{Yubikey}
-TODO
+\section{Multifactor authorization: Yubikey}
+
+Yubikey is a marketed USB dongle used for various Multifactor authentication purposes. It can be set up in different modes, for One Time Password (OTP) based on a series of variables, including sequence numbers. In this work we used the Challenge-Response mode, where the Yubikey is configured with a shared Secret Key among the server and the key itself. The Secret Key is SHA-1 cryptographic hash function. 
+
+Yubikey furthermore provides a simple procedure for the user: only a physical touch on the device is neccesary to allow the device to respond to the presented challenge.
+
 
 \section{Previous work}
 We based our model on a proposed hard drive encryption mechanism published on the Yubikey website\cite{YubikeyEncryption}. In their proposed configuration the Yubikey is programmed with a secret key after which it is able to perform HMAC-SHA1 encryption. The device is said to be operating in Challenge-Response mode since you can send it a challenge and it will respond with the HMAC-SHA1 encryption of the challenge with the secret key. This is depicted in figure 1.
@@ -193,10 +197,6 @@ A benefit from this central point of contol is that the server can deny access t
 \centerline{\includegraphics[width=\linewidth]{SystemFigure.pdf}}
 \caption{System components and interaction. 4 major steps to grant access.}\label{systemfigure}
 \end{figure}
-
-\section{Multifactor authorization: Yubikey}
-
-In this work we choose Yubikey for Multifactor authentication for several reasons: It provides a simple procedure for the user - only a physical touch on the device is neccesary to allow the device to respond to the presented challenge.
 
 
 \section{Encryption scheme}
