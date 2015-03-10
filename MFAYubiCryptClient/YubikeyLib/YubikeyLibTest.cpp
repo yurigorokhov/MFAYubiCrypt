@@ -86,7 +86,7 @@ int _tmain(int argc, char *argv[])
     YKLIB_RC rc;
     STATUS status;
     CONFIG config;
-    BYTE targetSlot = YKLIB_FIRST_SLOT;
+    BYTE targetSlot = YKLIB_SECOND_SLOT;
 
     memset(&status, 0, sizeof(status));
 
@@ -114,16 +114,43 @@ int _tmain(int argc, char *argv[])
 
         printf("\nSelect a..o > ");
 		*/
+	
+/*	int countLen = 0;
+	for (char* it = argv[1]; *it; ++it) {
+		//*it;
+		printf("%c", it);
+		countLen++;
+	}
+*/
+/*	printf("Len: %i", strlen(argv[1]));
 
-	//for (i = 0; i < 5; i=i+2) printf("%c", argv[1][i]);
-		//printf("%s", argv[1]);
+	for (i = 0; i <= 16; i = i + 2){
+		printf("%c", argv[1][i]);
 
-	//printf("\n%d", sizeof(argv[1]));
+	}
+*/		//printf("%s", argv[1]);
+	int size_of_input = 64;//sizeof(argv[1]);
+//	printf("\n Size of input: %d", size_of_input);
 
 	yk.openKey();
 
-				memcpy(buffer, argv[1], 9);
-                printRetcode(rc = yk.writeChallengeBegin(targetSlot, YKLIB_CHAL_HMAC, buffer, 9));
+				memcpy(buffer, argv[1], size_of_input);
+
+				int count = 0;
+				for (i = 0; i < size_of_input; i = i + 1){
+					buffer[i] = argv[1][count];
+					count = count + 2;
+				}
+
+/*				printf("\n Input: ");
+				for (i = 0; i < size_of_input; i = i + 1){
+					printf("%c", buffer[i]);
+
+				}
+
+				printf("\n");
+				*/
+				printRetcode(rc = yk.writeChallengeBegin(targetSlot, YKLIB_CHAL_HMAC, buffer, size_of_input));
                 
                 if (rc == YKLIB_OK) {
 
