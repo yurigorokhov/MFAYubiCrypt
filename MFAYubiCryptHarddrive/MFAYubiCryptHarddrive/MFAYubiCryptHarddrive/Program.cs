@@ -13,23 +13,127 @@ namespace MFAYubiCryptHarddrive
     {
         private static void Main(string[] args)
         {
-            Console.WriteLine("Select an action to perform:");
-            Console.WriteLine("1. Setup a new file with encryption.");
-            Console.WriteLine("2. Unlock an encrypted file.");
+            var encryptionIds = new List<Tuple<string, string>>();
 
-            var command = Console.ReadKey();
-            var consoleKey = command.KeyChar.ToString();
-
-            if (consoleKey.Equals("1"))
+            while (true)
             {
-                SetupFileWithEncryption();
+                Console.WriteLine("Select an action to perform:");
+                Console.WriteLine("1. Setup a new file with encryption.");
+                Console.WriteLine("2. Unlock an encrypted file.");
+
+                var command = Console.ReadKey();
+                var consoleKey = command.KeyChar.ToString();
+
+                if (consoleKey.Equals("1"))
+                {
+                    encryptionIds.Add(SetupFileWithEncryption());
+                }
+                else if (consoleKey.Equals("2"))
+                {
+                    DecryptFile(encryptionIds);
+                }
+
+
+                Console.WriteLine("\n\n");
+            }
+        }
+
+        private static void DecryptFile(List<Tuple<string, string>> encryptionIds)
+        {
+            var currentDir = Directory.GetCurrentDirectory();
+            var files = Directory
+                .EnumerateFiles(currentDir, "*", SearchOption.AllDirectories)
+                .Select(Path.GetFileName);
+
+            Console.WriteLine("Current Dir is: " + currentDir);
+            Console.WriteLine("Files are: \n " + files.Aggregate(((current, next) => current + "\n " + next)));
+
+            var fileToDecrypt = Console.ReadLine();
+
+            Tuple<string, string> encryptionTuple = null;
+            foreach (var encryptionId in encryptionIds)
+            {
+                if (encryptionId.Item1.Equals(fileToDecrypt))
+                {
+                    encryptionTuple = encryptionId;
+                }
+            }
+
+            if (encryptionTuple == null)
+            {
+                throw new Exception("File requested was not on the list of known Ids.");
             }
 
 
-            Console.ReadLine();
+            string url = "http://ec2-52-0-229-227.compute-1.amazonaws.com:8888/api/decrypt/";
+
+            var postString = encryptionTuple.Item2;
+
+            string htmlResult;
+
+            using (WebClient wc = new WebClient())
+            {
+                try
+                {
+                    htmlResult = wc.UploadString(url + postString, "POST", "");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Bad return value from server. Do the specified encryptionId exist on the server?");
+                    throw;
+                }
+            }
+
+            var requestIdReturn = Newtonsoft.Json.JsonConvert.DeserializeObject<DecryptionReturn>(htmlResult);
+
+            Console.WriteLine("Request now posted to server. Awaiting acceptance from the quorum. Press any key to quire the server for status.");
+
+            
+
+            htmlResult = "";
+
+            while (htmlResult == "")
+            {
+                Console.ReadKey();
+
+                Console.WriteLine("Quering the server for status.");
+
+                using (WebClient wc = new WebClient())
+                {
+                    try
+                    {
+                        htmlResult = wc.DownloadString(url + requestIdReturn.RequestId);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(
+                            "Bad return value from server. Do the specified requestId exist on the server?");
+                        throw;
+                    }
+                }
+
+                if (htmlResult == "") { Console.WriteLine("Quorum has not responded. Try again later.");}
+            }
+
+            string decryptedFile;
+
+            using (StreamReader sr = new StreamReader(currentDir + "/" + fileToDecrypt))
+            {
+                String fileContent = sr.ReadToEnd();
+                decryptedFile = Cryptography.Decrypt(fileContent, htmlResult);
+            }
+
+            using (StreamWriter sw = new StreamWriter(currentDir + "/" + fileToDecrypt))
+            {
+                sw.Write(decryptedFile);
+            }
+
+            Console.WriteLine("decryptedFile: " + decryptedFile);
+
+
         }
 
-        private static void SetupFileWithEncryption()
+        private static Tuple<string,string> SetupFileWithEncryption()
         {
             Console.WriteLine("Choose users to participate in encryption. List users seperated by comma: ");
 
@@ -96,6 +200,8 @@ namespace MFAYubiCryptHarddrive
             var decryptedString = Cryptography.Decrypt(encryptedString, encryptionSetupReturn.ShaKeys);
 
             Console.WriteLine("decryptedString: " + decryptedString);
+
+            return Tuple.Create(fileToEncrypt, encryptionSetupReturn.EncryptionId);
         }
     }
 
@@ -104,6 +210,11 @@ namespace MFAYubiCryptHarddrive
         public string EncryptionId;
         public string ShaKeys;
 
+    }
+
+    class DecryptionReturn
+    {
+        public string RequestId;
     }
 
 }
