@@ -68,6 +68,7 @@
 
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{float}
 
 %------------------------------------------------
 % OPTIONAL POSTSCRIPT FONT FILES
@@ -170,34 +171,43 @@ Yubikey is a marketed USB dongle used for various Multifactor authentication pur
 Yubikey furthermore provides a simple procedure for the user: only a physical touch on the device is neccesary to allow the device to respond to the presented challenge.
 
 
+\section{System Description}
+
+The proposed system is composed of a user client, hard drive client and a verification server. The user clients forms a quorum that can respond to request from harddrive clients to unlock files. The basic idea is for server and userclients be initiated with a shared secret \ref{basicSystemFigure}.
+
+A benefit from this central point of control is that the server can deny access to a file, even though participants grant access, which might be useful in some access schemes.
+
+Donec nec egestas ipsum. Nullam vel felis quis libero ullamcorper sagittis bibendum nec est. Ut eu interdum urna. Ut aliquam orci non massa rutrum aliquam. Suspendisse rhoncus, ex at tincidunt varius, risus nisl iaculis erat, et tempus felis eros non purus. Quisque varius, velit molestie fermentum tincidunt, purus dolor lobortis erat, in consectetur dui libero et tortor. Etiam a quam dui. Mauris pulvinar, sem vitae ullamcorper porta, est augue luctus sapien, at ultricies purus neque sed massa. Integer aliquam placerat dignissim. Curabitur imperdiet nisl ac ullamcorper porttitor. Sed pharetra libero et magna consequat placerat sit amet sed purus. Vivamus et maximus libero. Morbi auctor in sapien placerat molestie. Maecenas maximus tempus sapien nec scelerisque. Nam id commodo dolor.
+
+\begin{figure}[H]
+\centerline{\includegraphics[width=1\linewidth]{images/BasicSystem.pdf}}
+\caption{System components and interaction. 4 major steps to grant access.}\label{basicSystemFigure}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[width=1\linewidth]{SystemFigure.pdf}}
+\caption{System components and interaction. 4 major steps to grant access.}\label{systemfigure}
+\end{figure}
+
 \section{Previous work}
 We based our model on a proposed hard drive encryption mechanism published on the Yubikey website\cite{YubikeyEncryption}. In their proposed configuration the Yubikey is programmed with a secret key after which it is able to perform HMAC-SHA1 encryption. The device is said to be operating in Challenge-Response mode since you can send it a challenge and it will respond with the HMAC-SHA1 encryption of the challenge with the secret key. This is depicted in figure 1.
 
 
-\begin{figure}
-\centerline{\includegraphics[width=\linewidth]{ChallengeResponseFigure.pdf}}
+\begin{figure}[H]
+\centerline{\includegraphics[width=0.7\linewidth]{ChallengeResponseFigure.pdf}}
 \caption{Challenge-Response mode of Yubikey.}\label{systemfigure}
 \end{figure}
 
 Figure 2 shows how this mode is used for encrypting a local hard drive. The hard drive is encrypted with a Drive Encryption Key (DEK) which is stored in a table along with the secret. Both are encrypted using AES. The key used for the encryption is shown in Figure 2. Once the user enters his password a challenge is generated. The challenge consists of the password itself and a sequence number (Seq) that is also stored in the table. This challenge is sent to the Yubikey, whose response allows us to decrypt the DEK and the secret. The hard drive can now be decrypted. After decryption the DEK is re-encrypted with a new sequence number and the secret.
 
-\begin{figure}
-\centerline{\includegraphics[width=\linewidth]{HardDriveEncryptionFigure.pdf}}
+\begin{figure}[H]
+\centerline{\includegraphics[width=1\linewidth]{HardDriveEncryptionFigure.pdf}}
 \caption{Local hard drive encryption configuration.}\label{systemfigure}
 \end{figure}
 
 %------------------------------------------------
 
-\section{System Description}
 
-The proposed system is composed of a user client, hard drive client and a verification server. 
-
-A benefit from this central point of control is that the server can deny access to a file, even though participants grant access, which might be useful in some access schemes.
-
-\begin{figure}
-\centerline{\includegraphics[width=\linewidth]{SystemFigure.pdf}}
-\caption{System components and interaction. 4 major steps to grant access.}\label{systemfigure}
-\end{figure}
 
 
 \section{Encryption scheme}
