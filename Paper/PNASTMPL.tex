@@ -165,7 +165,9 @@ Proposal of a system to authenticate access to encrypted files using both Multif
 
 \dropcap{Q}uorum \( \rightarrow \) the minimum number of members of an assembly or society that must be present at any of its meetings to make the proceedings of that meeting valid.
 
-Controlling who has access to files is often a requirement in industry and various other contexts. Systems for dealing with information that only is accessible with multiple people's consent is therefore interesting to investigate. Software for file access control purposes include Dell Identity Manager\cite{CLAcha1}, User Lock Access Manager \cite{UserLock} and native OS support such as an Access Control List. These systems is not addressing security as such, as not providing encryption capabilities. Common for these solutions is that file access is administered centrally by an administrator. We propose an approach were users actively set file permissions by agreeing to encrypt files by their common consent, only allowing access to these files when all parties have responded to the access request. The latter step is additionally secured by MultiFactor Authentication.
+Controlling who has access to files is often a requirement in industry and various other contexts. Systems for dealing with information that only is accessible with multiple people's consent is therefore interesting to investigate. Software for file access control purposes include Dell Identity Manager\cite{CLAcha1}, User Lock Access Manager \cite{UserLock} and native OS support such as an Access Control List. These systems is not addressing security as such, as not providing encryption capabilities. Common for these solutions is that file access is administered centrally by an administrator. We propose an approach were users actively set file permissions by agreeing to encrypt files by their common consent, only allowing access to these files when all parties have responded to the access request. The latter step is additionally secured by MultiFactor Authentication.\newline
+
+The following section present the proposed system. Hereafter a section on previus work that our work is based on and lastly a security evaluation of the system including possible attack vectors.
 
 \section{Multifactor authorization: Yubikey}
 
@@ -190,7 +192,7 @@ A benefit from this central point of control is that the server can deny access 
 
 \begin{figure}[H]
 \centerline{\includegraphics[width=1\linewidth]{images/BasicSystem.pdf}}
-\caption{System concept. Important to note is that all secrets are stored in encrypted form.}\label{fig:basicSystemFigure}
+\caption{System concept. Important to note is that all secrets are stored in encrypted form. Secret in the User Client are stored inside the Yubikey. }\label{fig:basicSystemFigure}
 \end{figure}
 
 \begin{figure}[H]
