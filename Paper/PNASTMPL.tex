@@ -161,13 +161,15 @@ Proposal of a system to authenticate access to encrypted files using both Multif
 
 \section{Introduction}
 
-\dropcap{C}ontrolling who has access to files is often a requirement in industry and various other contexts. Systems for dealing with information that only is accessible with multiple people's consent is therefore interesting to investigate. Software for file access control purposes include Dell Identity Manager\cite{CLAcha1}, User Lock Access Manager \cite{UserLock} and native OS support such as an Access Control List. These systems is not addressing security as such, as not providing encryption capabilities. Common for these solutions is that file access is administered centrally by a administrator. We propose an approach were users actively set file permissions by agreeing to encrypt files by their common consent, only allowing access to these files when all parties have responded to the access request. The latter step is additionally secured by MultiFactor Authentication.
+\dropcap{Q}uorum \( \rightarrow \) the minimum number of members of an assembly or society that must be present at any of its meetings to make the proceedings of that meeting valid.
+
+Controlling who has access to files is often a requirement in industry and various other contexts. Systems for dealing with information that only is accessible with multiple people's consent is therefore interesting to investigate. Software for file access control purposes include Dell Identity Manager\cite{CLAcha1}, User Lock Access Manager \cite{UserLock} and native OS support such as an Access Control List. These systems is not addressing security as such, as not providing encryption capabilities. Common for these solutions is that file access is administered centrally by an administrator. We propose an approach were users actively set file permissions by agreeing to encrypt files by their common consent, only allowing access to these files when all parties have responded to the access request. The latter step is additionally secured by MultiFactor Authentication.
 
 \section{Multifactor authorization: Yubikey}
 
 Yubikey is a marketed USB dongle used for various Multifactor authentication purposes. It can be set up in different modes, for One Time Password (OTP) based on a series of variables, including sequence numbers. In this work we used the Challenge-Response mode, where the Yubikey is configured with a shared Secret Key among the server and the key itself. The Secret Key is SHA-1 cryptographic hash function. 
 
-Yubikey furthermore provides a simple procedure for the user: only a physical touch on the device is neccesary to allow the device to respond to the presented challenge.
+Yubikey furthermore provides a simple procedure for the user: only a physical touch on the device is necessary to allow the device to respond to the presented challenge.
 
 
 \section{Previous work}
@@ -202,7 +204,22 @@ A benefit from this central point of control is that the server can deny access 
 
 \section{Encryption scheme}
 
-This sections presents the encryption scheme used, to ensure that decryption of the file is only possible when responses from all participants and their Yubikey challenges are retrieved.
+This sections presents the encryption scheme used, to ensure that decryption of the file is only possible when responses from all participants and their Yubikey challenges are retrieved. 
+
+\subsection{Setup Of Quorum}
+
+When a user is added to the server, he is given a secret key by the server that is written into the Yubikey. 
+
+The hard drive host (the client program that is in charge of decrypting the drive) generates a Drive Encryption Key (DEK) to encrypt the hard drive with. Once encrypted, it sends a request to the server to set up a quorum of users with which it wants to share the encryption with. The server responds with an encryptionId and a secret cryptographic hash \( SHA(\sum key) \). This hash, along with the DEK are AES-encrypted and stored on the hard drive host. The key used for the encryption is calculated as follows:
+\begin{equation}
+	key = HMACSHA1( challenge, SHA(\sum key))
+\end{equation}
+\begin{equation}
+	challenge = SHA(encryptionId + seq + password)
+\end{equation}
+The seq is a sequence number that is used to provide entropy to the challenge, it is also stored on the host. The password is necessary to generate the challenge in the future, and is global to this hard drive, not specific to any particular user in the quorum. After this encryption the hard drive host no longer has access to the DEK or the \( SHA(\sum key) \).
+
+During the setup phase the server generates a key for each user in the quorum that is unique for the user-encryptionId pair. These keys comprise the \( SHA(\sum key) \) cryptographic hash used above. Each of these keys is stored on the server 
 
 \section{Security Evaluation}
 We evaluate the security of the proposed system by considering various attack vectors. We leave the evaluation of specific encryption and hashing mechanisms to other work, and assume them to be computationally unreasonably hard to break. We also do not evaluate the security implications of specifically using the Yubikey product, Yubico provides a detailed evaluation on their website \cite{YubikeySecurity}. 
