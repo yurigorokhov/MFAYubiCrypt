@@ -69,6 +69,7 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{float}
+\usepackage{todo}
 
 %------------------------------------------------
 % OPTIONAL POSTSCRIPT FONT FILES
@@ -170,20 +171,26 @@ Controlling who has access to files is often a requirement in industry and vario
 
 Yubikey is a marketed USB dongle used for various Multifactor authentication purposes. It can be set up in different modes, for One Time Password (OTP) based on a series of variables, including sequence numbers. In this work we used the Challenge-Response mode, where the Yubikey is configured with a shared Secret Key among the server and the key itself. The Secret Key is SHA-1 cryptographic hash function. 
 
-Yubikey furthermore provides a simple procedure for the user: only a physical touch on the device is necessary to allow the device to respond to the presented challenge.
+Yubikey furthermore provides a simple procedure for the user: only a physical touch on the device is necessary to allow the device to respond to the presented challenge. This is used to make sure that is is an actual person granting the response to a challenge.
 
 
 \section{System Description}
 
-The proposed system is composed of a user client, hard drive client and a verification server. The user clients forms a quorum that can respond to request from harddrive clients to unlock files. The basic idea is for server and userclients be initiated with a shared secret \ref{basicSystemFigure}.
+The proposed system is composed of a user client, hard drive client and a verification server. The user clients forms a quorum that can respond to request from harddrive clients to unlock files. The basic idea is for server and userclients to be instantiated with a shared secret, see figure ~\ref{fig:basicSystemFigure}.
+
+This structure allows for a distribution of the key that is needed to unlock the encrypted file in question on the harddrive client. This is ensured by having the server encrypt the key used to encrypt the actual file, with every single clients information (login credential, yubikey secret and sequence number). The actual file encryption key is reffered to as the actual file key (AFK). 
+
+The use of sequence numbers is essential, as if the https connection is somehow compromised, the retreived value is not static. \todo{Add more details here. Are the attacker able to use one compromised challenge-response to decrypt the file?}
+
+Compromising the server would not get you access to the decryption key, as it only stores the encrypted values of each clients secrets. An attacker would need to compromise the server and the clients in order to get all the information needed to decrypt the indivual keys on the server side, such that the AFK is revealed. 
 
 A benefit from this central point of control is that the server can deny access to a file, even though participants grant access, which might be useful in some access schemes.
 
-Donec nec egestas ipsum. Nullam vel felis quis libero ullamcorper sagittis bibendum nec est. Ut eu interdum urna. Ut aliquam orci non massa rutrum aliquam. Suspendisse rhoncus, ex at tincidunt varius, risus nisl iaculis erat, et tempus felis eros non purus. Quisque varius, velit molestie fermentum tincidunt, purus dolor lobortis erat, in consectetur dui libero et tortor. Etiam a quam dui. Mauris pulvinar, sem vitae ullamcorper porta, est augue luctus sapien, at ultricies purus neque sed massa. Integer aliquam placerat dignissim. Curabitur imperdiet nisl ac ullamcorper porttitor. Sed pharetra libero et magna consequat placerat sit amet sed purus. Vivamus et maximus libero. Morbi auctor in sapien placerat molestie. Maecenas maximus tempus sapien nec scelerisque. Nam id commodo dolor.
+
 
 \begin{figure}[H]
 \centerline{\includegraphics[width=1\linewidth]{images/BasicSystem.pdf}}
-\caption{System components and interaction. 4 major steps to grant access.}\label{basicSystemFigure}
+\caption{System concept. Important to note is that all secrets are stored in encrypted form.}\label{fig:basicSystemFigure}
 \end{figure}
 
 \begin{figure}[H]
