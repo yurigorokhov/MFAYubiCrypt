@@ -202,20 +202,25 @@ Yubikey is a marketed USB dongle used for various Multifactor authentication pur
 
 Yubikey furthermore provides a simple procedure for the user: only a physical touch on the device is necessary to allow the device to respond to the presented challenge. This is used to make sure that is is an actual person granting the response to a challenge.
 
+\begin{figure}[h]
+\centerline{\includegraphics[width=0.3\linewidth]{images/YubiKey_Standard.png}}
+\caption{Yubikey capable of performing HMAC-SHA1 encryption with pre-programmed secret.}\label{yubikey}
+\end{figure}
+
 \section{Previous work}
-We based our model on a proposed hard drive encryption mechanism published on the Yubikey website\cite{YubikeyEncryption}. In their proposed configuration the Yubikey is programmed with a secret key after which it is able to perform HMAC-SHA1 encryption. The device is said to be operating in Challenge-Response mode since you can send it a challenge and it will respond with the HMAC-SHA1 encryption of the challenge with the secret key. This is depicted in figure 1.
+We based our model on a proposed hard drive encryption mechanism published on the Yubikey website\cite{YubikeyEncryption}. In their proposed configuration the Yubikey is programmed with a secret key after which it is able to perform HMAC-SHA1 encryption. The device is said to be operating in Challenge-Response mode since you can send it a challenge and it will respond with the HMAC-SHA1 encryption of the challenge with the secret key. This is depicted in figure~\ref{fig:challengeResponse}.
 
 
 \begin{figure}[h]
 \centerline{\includegraphics[width=0.7\linewidth]{ChallengeResponseFigure.pdf}}
-\caption{Challenge-Response mode of Yubikey.}\label{systemfigure}
+\caption{Challenge-Response mode of Yubikey.}\label{fig:challengeResponse}
 \end{figure}
 
 Figure 2 shows how this mode is used for encrypting a local hard drive. The hard drive is encrypted with a Drive Encryption Key (DEK) which is stored in a table along with the secret. Both are encrypted using AES. The key used for the encryption is shown in Figure 2. Once the user enters his password a challenge is generated. The challenge consists of the password itself and a sequence number (Seq) that is also stored in the table. This challenge is sent to the Yubikey, whose response allows us to decrypt the DEK and the secret. The hard drive can now be decrypted. After decryption the DEK is re-encrypted with a new sequence number and the secret.
 
 \begin{figure}[h]
 \centerline{\includegraphics[width=1\linewidth]{HardDriveEncryptionFigure.pdf}}
-\caption{Local hard drive encryption configuration.}\label{systemfigure}
+\caption{Local hard drive encryption configuration.}\label{fig:harddriveEncryption}
 \end{figure}
 
 %------------------------------------------------
