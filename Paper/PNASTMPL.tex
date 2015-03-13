@@ -229,16 +229,46 @@ This sections presents the encryption scheme used, to ensure that decryption of 
 
 When a user is added to the server, he is given a secret key by the server that is written into the Yubikey. 
 
-The hard drive host (the client program that is in charge of decrypting the drive) generates a Drive Encryption Key (DEK) to encrypt the hard drive with. Once encrypted, it sends a request to the server to set up a quorum of users with which it wants to share the encryption with. The server responds with an encryptionId and a secret cryptographic hash \( SHA(\sum key) \). This hash, along with the DEK are AES-encrypted and stored on the hard drive host. The key used for the encryption is calculated as follows:
+The hard drive host (the client program that is in charge of decrypting the drive) generates a Drive Encryption Key (DEK) to encrypt the hard drive with. Once encrypted, it sends a request to the server to set up a quorum of users with which it wants to share the encryption. The server responds with an encryptionId and a secret cryptographic hash \( SHA(\sum key) \). This hash, along with the DEK are AES-encrypted and stored on the hard drive host. The key used for the encryption is calculated as follows:
 \begin{equation}
-	key = HMACSHA1( challenge, SHA(\sum key))
+	encryptionKey = HMACSHA1( challenge, SHA(\sum key))
 \end{equation}
 \begin{equation}
 	challenge = SHA(encryptionId + seq + password)
 \end{equation}
 The seq is a sequence number that is used to provide entropy to the challenge, it is also stored on the host. The password is necessary to generate the challenge in the future, and is global to this hard drive, not specific to any particular user in the quorum. After this encryption the hard drive host no longer has access to the DEK or the \( SHA(\sum key) \).
 
-During the setup phase the server generates a key for each user in the quorum that is unique for the user-encryptionId pair. These keys comprise the \( SHA(\sum key) \) cryptographic hash used above. Each of these keys is stored on the server 
+During the setup phase the server generates a key for each user in the quorum such that it is unique for the user-encryptionId pair. These keys are used to compute the \( SHA(\sum key) \) cryptographic hash used above.
+
+\section{Key Generation and Storage}
+
+When the server generates a unique key for the user-encryptionId, it immediately AES-encrypts it along with the users's secret. It uses the following encryptionKey for the encryption:
+
+\begin{equation}
+	encryptionKey = HMACSHA1( challenge, secret)
+\end{equation}
+\begin{equation}
+	challenge = SHA(encryptionId + userId + seq)
+\end{equation}
+
+Note that after this encryption, the unique key and the user's secret are encrypted away. 
+
+\section{Decryption Process}
+When the hard drive host wants to decrypt the hard drive, it sends a request to the server with the corresponding encryptionId. Along with the request, it also sends a challenge:
+
+\begin{equation}
+challenge = SHA(encryptionId + seq + password)
+\end{equation}
+
+Note that in order to decrypt the DEK the server needs to obtain: \( HMACSHA1( challenge, SHA(\sum key)) \). Upon receiving the request the server needs to gain access to the keys of all the users that are part of the quorum so that it can generate \( SHA(\sum key) \). In order to do so it sends each user a challenge:
+
+\begin{equation}
+	challenge = SHA(encryptionId + userId + seq)
+\end{equation}
+
+The user responds with \( HMACSHA1( challenge, secret) \) using their Yubikey. This response can be used to decrypt the key that belongs to the encryptionId-user pair. Once all the users have responded we now can calculate \( SHA(\sum key) \). At this point we no longer need the individual keys, and they can be re-encrypted with incremented sequence numbers. Now we return  \( HMACSHA1( challenge, SHA(\sum key)) \) to the hard drive host. 
+
+The hard drive host now decrypts the DEK and the hard drive. Immediately it re-encrypts the DEK with an incremented sequence number.
 
 \section{Security Evaluation}
 We evaluate the security of the proposed system by considering various attack vectors. We leave the evaluation of specific encryption and hashing mechanisms to other work, and assume them to be computationally unreasonably hard to break. We also do not evaluate the security implications of specifically using the Yubikey product, Yubico provides a detailed evaluation on their website \cite{YubikeySecurity}. 
@@ -269,7 +299,10 @@ The challenge and the response leak no data, nor are they useful in a future dec
 Between the server and users, only challenge and response are exchanged over the wire. These change every request due to per-user sequence numbers thus intercepting these would not lead to future vulnerabilities.
 
 \subsection{Hard Drive host attacks}
+If the hard drive host is compromised, it could issue a decryption request to the server. For this attack vector to work, all the users would need to respond to the challenges. Without the server's approval the attacker would not gain access to the DEK. If the hard drive host is compromised during a legitimate decryption, it could also obtain the DEK by reading it from the program's memory, we consider such an attack very difficult to mount.
+
 \subsection{Client User Attacks}
+A compromised client could potentially respond to challenges programatically. The Yubikey provides a setting, where a button press is required in order to respond to a challenge, this precaution will prevent automated responses.
 
 %------------------------------------------------
 
