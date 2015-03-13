@@ -125,7 +125,7 @@
 %	TITLE AND AUTHORS
 %----------------------------------------------------------------------------------------
 
-\title{Multifactor, multiple people. Authentication approach for unlocking encrypted files.} % For titles, only capitalize the first letter
+\title{File Access Quorum, Secured by Multifactor Authentication.} % For titles, only capitalize the first letter
 
 %------------------------------------------------
 
@@ -145,12 +145,15 @@ Lars Noergaard Nielsen\affil{1}{University of California, San Diego}}
 %----------------------------------------------------------------------------------------
 
 \begin{abstract}
-Proposal of a system to authenticate access to encrypted files using both Multifactor and multiple people, across different locations. Making sure that files are only accessible with the consent of all involved participants.
+In some file access schemes, it would be beneficial to only be able to decrypt a given file with the consent of a quorum. This paper presents a system for securely providing that functionality. Distributing this functionalty over a server and multiple clients, allowing for remote consent from the formed quorum for a given file. Once the clients and server are initialized with shared secrets, no information is sent over the wire unencrypted.
+
+The shared secret on the client side is programmed initially to dedicated hardware, a Yubikey, that provides a challenge-response interface. Basically it returns HMAC SHA1 encryption of the challenge with the programmed secret. That way the server, who also knows the secret, can verify the correct response to the challenge.
+
 \end{abstract}
 
 %------------------------------------------------
 
-\keywords{Multifactor | Encryption} % When adding keywords, separate each term with a straight line: |
+\keywords{Multifactor | Encryption | Quorum constent} % When adding keywords, separate each term with a straight line: |
 
 %------------------------------------------------
 
@@ -167,14 +170,7 @@ Proposal of a system to authenticate access to encrypted files using both Multif
 
 Controlling who has access to files is often a requirement in industry and various other contexts. Systems for dealing with information that only is accessible with multiple people's consent is therefore interesting to investigate. Software for file access control purposes include Dell Identity Manager\cite{CLAcha1}, User Lock Access Manager \cite{UserLock} and native OS support such as an Access Control List. These systems is not addressing security as such, as not providing encryption capabilities. Common for these solutions is that file access is administered centrally by an administrator. We propose an approach were users actively set file permissions by agreeing to encrypt files by their common consent, only allowing access to these files when all parties have responded to the access request. The latter step is additionally secured by MultiFactor Authentication.\newline
 
-The following section present the proposed system. Hereafter a section on previus work that our work is based on and lastly a security evaluation of the system including possible attack vectors.
-
-\section{Multifactor authorization: Yubikey}
-
-Yubikey is a marketed USB dongle used for various Multifactor authentication purposes. It can be set up in different modes, for One Time Password (OTP) based on a series of variables, including sequence numbers. In this work we used the Challenge-Response mode, where the Yubikey is configured with a shared Secret Key among the server and the key itself. The Secret Key is SHA-1 cryptographic hash function. 
-
-Yubikey furthermore provides a simple procedure for the user: only a physical touch on the device is necessary to allow the device to respond to the presented challenge. This is used to make sure that is is an actual person granting the response to a challenge.
-
+The following section present the proposed system. Hereafter a section on previus work that our effort is based on. Lastly a security evaluation of the system including possible attack vectors.
 
 \section{System Description}
 
@@ -190,35 +186,39 @@ A benefit from this central point of control is that the server can deny access 
 
 
 
-\begin{figure}[H]
+\begin{figure}[h]
 \centerline{\includegraphics[width=1\linewidth]{images/BasicSystem.pdf}}
 \caption{System concept. Important to note is that all secrets are stored in encrypted form. Secret in the User Client are stored inside the Yubikey. }\label{fig:basicSystemFigure}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[h]
 \centerline{\includegraphics[width=1\linewidth]{SystemFigure.pdf}}
 \caption{System components and interaction. 4 major steps to grant access.}\label{systemfigure}
 \end{figure}
+
+\subsection{Multifactor authorization: Yubikey}
+
+Yubikey is a marketed USB dongle used for various Multifactor authentication purposes. It can be set up in different modes, for One Time Password (OTP) based on a series of variables, including sequence numbers. In this work we used the Challenge-Response mode, where the Yubikey is configured with a shared Secret Key among the server and the key itself. The Secret Key is SHA-1 cryptographic hash function. 
+
+Yubikey furthermore provides a simple procedure for the user: only a physical touch on the device is necessary to allow the device to respond to the presented challenge. This is used to make sure that is is an actual person granting the response to a challenge.
 
 \section{Previous work}
 We based our model on a proposed hard drive encryption mechanism published on the Yubikey website\cite{YubikeyEncryption}. In their proposed configuration the Yubikey is programmed with a secret key after which it is able to perform HMAC-SHA1 encryption. The device is said to be operating in Challenge-Response mode since you can send it a challenge and it will respond with the HMAC-SHA1 encryption of the challenge with the secret key. This is depicted in figure 1.
 
 
-\begin{figure}[H]
+\begin{figure}[h]
 \centerline{\includegraphics[width=0.7\linewidth]{ChallengeResponseFigure.pdf}}
 \caption{Challenge-Response mode of Yubikey.}\label{systemfigure}
 \end{figure}
 
 Figure 2 shows how this mode is used for encrypting a local hard drive. The hard drive is encrypted with a Drive Encryption Key (DEK) which is stored in a table along with the secret. Both are encrypted using AES. The key used for the encryption is shown in Figure 2. Once the user enters his password a challenge is generated. The challenge consists of the password itself and a sequence number (Seq) that is also stored in the table. This challenge is sent to the Yubikey, whose response allows us to decrypt the DEK and the secret. The hard drive can now be decrypted. After decryption the DEK is re-encrypted with a new sequence number and the secret.
 
-\begin{figure}[H]
+\begin{figure}[h]
 \centerline{\includegraphics[width=1\linewidth]{HardDriveEncryptionFigure.pdf}}
 \caption{Local hard drive encryption configuration.}\label{systemfigure}
 \end{figure}
 
 %------------------------------------------------
-
-
 
 
 \section{Encryption scheme}
