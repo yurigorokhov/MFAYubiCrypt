@@ -176,11 +176,11 @@ The following section present the proposed system. Hereafter a section on previu
 
 The proposed system is composed of a user client, hard drive client and a verification server. The user clients forms a quorum that can respond to request from harddrive clients to unlock files. The basic idea is for server and userclients to be instantiated with a shared secret, see figure ~\ref{fig:basicSystemFigure}.
 
-This structure allows for a distribution of the key that is needed to unlock the encrypted file in question on the harddrive client. This is ensured by having the server encrypt the key used to encrypt the actual file, with every single clients information (login credential, yubikey secret and sequence number). The actual file encryption key is reffered to as the actual file key (AFK). 
+This structure allows for a distribution of the key that is needed to unlock the encrypted file in question on the harddrive client. This is ensured by having the server encrypt the key used to encrypt the actual file, with every single clients information (login credential, yubikey secret and sequence number). The actual file encryption key is reffered to as the Disk Encryptio Key (DEK). 
 
 The use of sequence numbers is essential, as if the https connection is somehow compromised, the retreived value is not static. \todo{Add more details here. Are the attacker able to use one compromised challenge-response to decrypt the file?}
 
-Compromising the server would not get you access to the decryption key, as it only stores the encrypted values of each clients secrets. An attacker would need to compromise the server and the clients in order to get all the information needed to decrypt the indivual keys on the server side, such that the AFK is revealed. 
+Compromising the server would not get you access to the decryption key, as it only stores the encrypted values of each clients secrets. An attacker would need to compromise the server and the clients in order to get all the information needed to decrypt the indivual keys on the server side, such that the DEK is revealed. 
 
 A benefit from this central point of control is that the server can deny access to a file, even though participants grant access, which might be useful in some access schemes.
 \begin{figure}[h]
@@ -194,11 +194,16 @@ A benefit from this central point of control is that the server can deny access 
 
 Figure \ref{fig:systemfigure} describes the steps involved with decrypting a file, with a quorum of three clients. Essential to this procedure is that at no point is the actual file key sent ower the network. Only in encrypted form with sequence numbers adding entropy. This is achieved by HMAC-SHA1 encryption of the exchanged data, with the shared secrets.
 
+\begin{figure}[h]
+\centerline{\includegraphics[width=1\linewidth]{images/DetailedSystem.pdf}}
+\caption{System with needed variables}\label{fig:detailedsystemfigure}
+\end{figure}
+
 \subsection{Multifactor authorization: Yubikey}
 
 Yubikey is a marketed USB dongle used for various Multifactor authentication purposes. It can be set up in different modes, for One Time Password (OTP) based on a series of variables, including sequence numbers. In this work we used the Challenge-Response mode, where the Yubikey is configured with a shared Secret Key among the server and the key itself. The Secret Key is SHA-1 cryptographic hash function. 
 
-Yubikey furthermore provides a simple procedure for the user: only a physical touch on the device is necessary to allow the device to respond to the presented challenge. This is used to make sure that is is an actual person granting the response to a challenge.
+Yubikey furthermore provides a simple procedure for the user: only a physical touch on the device is necessary to allow the device to respond to the presented challenge. This is used to make sure that it is an actual person granting the response to a challenge.
 
 Furthermore, this hardware allows for a secure distribution of shared secrets, as yubikeys can be handed out or shipped to users pre-programmed. Thereby not having to send any shared secrets over the wire.
 
@@ -286,7 +291,9 @@ In designing the server side component we took deliberate care not to expose eno
 	\item Mapping of hard drive to users who belong to the encryption
 	\item Sequence number used for obfuscation
 \end{itemize}
-In order to decrypt the secret or the key, the attacker would need to gain access to the user's secret in order to be able to generate the decryption key via a HMAC-SHA1 algorithm. While the server does not provide any additional protection if the user secret has been compromised, it does not make matters any worse. Furthermore all users of a particular hard drive would need to be compromised in this way for a successful decryption. This is analogous to finding out everyone's password, which is stored on their YubiKey device.
+In order to decrypt the secret or the key, the attacker would need to gain access to the user's secret in order to be able to generate the decryption key via a HMAC-SHA1 algorithm. While the server does not provide any additional protection if the user secret has been compromised, it does not make matters any worse. Furthermore all users of a particular hard drive would need to be compromised in this way for a successful decryption. This is analogous to finding out everyone's password\todo{dont you mean secret? As that is stored on the yubikey. The password the user just knows, so that it is actually multifactor..}, which is stored on their YubiKey device.
+
+\todo{Should we discuss the attack where the attacker takes over the server, and sends out requests to users to gain access to files ? .. it is maybe a bit sought for, as he would also need to compromise the harddrive client in order to gain access to the actual file..}
 
 \subsection{Network Attacks}
 All communications are assumed to be SSL encrypted in a production environment to provide the first layer of security. With that in mind, let us consider what data is sent over the network during the decryption process.
@@ -321,11 +328,11 @@ Various attack vectors on this system has been identified, with the most vulnera
 %	ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
 
-\pagebreak
+%\pagebreak
 
-\begin{acknowledgments}
-This work was supported by..
-\end{acknowledgments}
+%\begin{acknowledgments}
+%This work was supported by..
+%\end{acknowledgments}
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
