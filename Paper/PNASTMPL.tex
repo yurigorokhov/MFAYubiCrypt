@@ -188,11 +188,13 @@ A benefit from this central point of control is that the server can deny access 
 \caption{System concept. Important to note is that all secrets are stored in encrypted form. Secret in the User Client are stored inside the Yubikey. }\label{fig:basicSystemFigure}
 \end{figure}
 \begin{figure}[h]
-\centerline{\includegraphics[width=1\linewidth]{SystemFigure.pdf}}
+\centerline{\includegraphics[width=1\linewidth]{images/SystemSteps.pdf}}
 \caption{System components and interaction. 4 major steps to grant access.}\label{fig:systemfigure}
 \end{figure}
 
 Figure \ref{fig:systemfigure} describes the steps involved with decrypting a file, with a quorum of three clients. Essential to this procedure is that at no point is the actual file key sent ower the network. Only in encrypted form with sequence numbers adding entropy. This is achieved by HMAC-SHA1 encryption of the exchanged data, with the shared secrets.
+
+To give a full overview of what needs to be stored in the indivual parts of the system, figure \ref{fig:detailedsystemfigure} shows a configuration with three user clients.
 
 \begin{figure}[h]
 \centerline{\includegraphics[width=1\linewidth]{images/DetailedSystem.pdf}}
