@@ -125,7 +125,7 @@
 %	TITLE AND AUTHORS
 %----------------------------------------------------------------------------------------
 
-\title{File Access Quorum, Secured by Multifactor Authentication.} % For titles, only capitalize the first letter
+\title{File Access Quorum. Secured by Multifactor Authentication.} % For titles, only capitalize the first letter
 
 %------------------------------------------------
 
@@ -168,7 +168,7 @@ The shared secret on the client side is programmed initially to dedicated hardwa
 
 \dropcap{Q}uorum \( \rightarrow \) the minimum number of members of an assembly or society that must be present at any of its meetings to make the proceedings of that meeting valid.
 
-Controlling who has access to files is often a requirement in industry and various other contexts. Systems for dealing with information that only is accessible with multiple people's consent is therefore interesting to investigate. Software for file access control purposes include Dell Identity Manager\cite{CLAcha1}, User Lock Access Manager \cite{UserLock} and native OS support such as an Access Control List. These systems is not addressing security as such, as not providing encryption capabilities. Common for these solutions is that file access is administered centrally by an administrator. We propose an approach were users actively set file permissions by agreeing to encrypt files by their common consent, only allowing access to these files when all parties have responded to the access request. The latter step is additionally secured by MultiFactor Authentication.\newline
+Controlling who has access to files is often a requirement in industry and various other contexts. Systems for dealing with information that only is accessible with multiple people's consent is therefore interesting to investigate. Software for file access control purposes include Dell Identity Manager\cite{CLAcha1}, User Lock Access Manager \cite{UserLock} and native OS support such as an Access Control List. These systems is not addressing security as such, as not providing encryption capabilities. Common for these solutions is that file access is administered centrally by an administrator. We propose an approach were users actively set file permissions by agreeing to encrypt files by their common consent, only allowing access to these files when all parties have responded to the access request. The latter step is additionally secured by MultiFactor Authentication. Whether this is applied to a single file, folder or whole harddrive, the same approach is valid.\newline
 
 The following section present the proposed system. Hereafter a section on previus work that our effort is based on. Lastly a security evaluation of the system including possible attack vectors.
 
@@ -183,24 +183,24 @@ The use of sequence numbers is essential, as if the https connection is somehow 
 Compromising the server would not get you access to the decryption key, as it only stores the encrypted values of each clients secrets. An attacker would need to compromise the server and the clients in order to get all the information needed to decrypt the indivual keys on the server side, such that the AFK is revealed. 
 
 A benefit from this central point of control is that the server can deny access to a file, even though participants grant access, which might be useful in some access schemes.
-
-
-
 \begin{figure}[h]
-\centerline{\includegraphics[width=1\linewidth]{images/BasicSystem.pdf}}
+\centerline{\includegraphics[width=0.7\linewidth]{images/BasicSystem.pdf}}
 \caption{System concept. Important to note is that all secrets are stored in encrypted form. Secret in the User Client are stored inside the Yubikey. }\label{fig:basicSystemFigure}
 \end{figure}
-
 \begin{figure}[h]
 \centerline{\includegraphics[width=1\linewidth]{SystemFigure.pdf}}
-\caption{System components and interaction. 4 major steps to grant access.}\label{systemfigure}
+\caption{System components and interaction. 4 major steps to grant access.}\label{fig:systemfigure}
 \end{figure}
+
+Figure \ref{fig:systemfigure} describes the steps involved with decrypting a file, with a quorum of three clients. Essential to this procedure is that at no point is the actual file key sent ower the network. Only in encrypted form with sequence numbers adding entropy. This is achieved by HMAC-SHA1 encryption of the exchanged data, with the shared secrets.
 
 \subsection{Multifactor authorization: Yubikey}
 
 Yubikey is a marketed USB dongle used for various Multifactor authentication purposes. It can be set up in different modes, for One Time Password (OTP) based on a series of variables, including sequence numbers. In this work we used the Challenge-Response mode, where the Yubikey is configured with a shared Secret Key among the server and the key itself. The Secret Key is SHA-1 cryptographic hash function. 
 
 Yubikey furthermore provides a simple procedure for the user: only a physical touch on the device is necessary to allow the device to respond to the presented challenge. This is used to make sure that is is an actual person granting the response to a challenge.
+
+Furthermore, this hardware allows for a secure distribution of shared secrets, as yubikeys can be handed out or shipped to users pre-programmed. Thereby not having to send any shared secrets over the wire.
 
 \begin{figure}[h]
 \centerline{\includegraphics[width=0.3\linewidth]{images/YubiKey_Standard.png}}
@@ -311,9 +311,11 @@ A compromised client could potentially respond to challenges programatically. Th
 
 %------------------------------------------------
 
-\section{Discussion}
+\section{Conclusion}
 
-Discussion on strengths and weaknesses of the solution
+We have presented a system for distributing file access to a quorum of users. Users request to encrypt/decrypt files by sending requests to a server. The server distributes the request to the quorum attached with that particular file. Only after responses from all participants of the quorum, the server is able to decrypt the decryption key for the particular file. This decryption key is then again encrypted in order to be transmitted securely back to the initial requester.
+
+Various attack vectors on this system has been identified, with the most vulnerable points being whenever the actual sum of all quorum keys are held in memory. This happens shortwhile on both the server and the harddrive client. In both cases, this value is quickly re-encrypted again with an increased sequence number. Also, the initialization of the shared secrets is vulnerable, which can be aliviated by shipping these in pre-programmed dedicated hardware devices, for instance Yubikeys.
 
 %----------------------------------------------------------------------------------------
 %	ACKNOWLEDGEMENTS
