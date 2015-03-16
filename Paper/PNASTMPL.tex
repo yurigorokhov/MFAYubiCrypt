@@ -145,11 +145,11 @@ Lars Noergaard Nielsen\affil{1}{University of California, San Diego}}
 %----------------------------------------------------------------------------------------
 
 \begin{abstract}
-In some file access schemes, it would be beneficial to be able to decrypt a given file only with the consent of a quorum of users. This paper presents a system for securely providing that functionality. Distributing this functionality over a server and multiple clients, allowing for remote consent from the formed quorum for a given file. Once the clients and server are initialized with shared secrets, no information is sent over the wire unencrypted.
+In some file access schemes, it would be beneficial to be able to decrypt a given file only with the consent of a quorum of users. This paper presents a system for securely providing that functionality. Distributing this functionality over a server and multiple clients, allowing for remote consent from the formed quorum for a given file. Once the clients and server are initialized with shared secrets, no information is sent over the wire unencrypted, preventing MIM\footnote{Man In the Middle} attacks.
 
-The shared secret on the client side is programmed initially to dedicated hardware, a Yubikey, that provides a challenge-response interface. Basically it returns HMACSHA1 encryption of the challenge with the programmed secret. That way the server, who also stores the secret\footnote{Encrypted with the next response from the Yubikey}, can verify the correct response to the challenge.
+The shared secret on the client side is programmed initially to dedicated hardware, a Yubikey, that provides a challenge-response interface. Basically it returns HMACSHA1 encryption of the challenge with the programmed secret. That way the server, who also stores the secret\footnote{Encrypted with the next response from the Yubikey}, can verify the correct response to the challenge. Given responses from all clients in the quorum, it forwards the SHA of these to the client actually hosting the file, in order to decrypt it.
 
-\todo{write in the attack vectors}
+The system is then designed in such a way, that the secrets are newer stored unencrypted on either the server or the clients, making attacks on these only possible by sniffing in-memory at the short time the secret is held for the purpose of re-encrypting for the next sequence. Thereby an attacker compromising the server or the user alone, wont be able to decrypt any files. 
 
 \end{abstract}
 
