@@ -10,8 +10,8 @@ namespace EncryptionTests {
 
 		[Test]
 		public void Can_perform_HMACSHA2 () {
-			var result = EncryptionBL.HMACSHA1 ("abcdef", "ec39110a7789e281399f3ea0d654412f95108e80");
-			Assert.AreEqual ("48eaacc73300ddadae8c3c587140f2f48d6ccfd5", result);
+			var result = EncryptionBL.HMACSHA1 ("104b02b6d45160079edc0ba97331954752f0b3dd3f53531b16506f3fa82df61e", "e71c27f8e84970238edce4ca62176c52d1a6d531");
+			Assert.AreEqual ("a2b101263b811ca5c3cd0f807f9168b08645e7d1", result);
 		}
 	}
 }
