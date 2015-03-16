@@ -254,7 +254,7 @@ During the setup phase the server generates a key for each user in the quorum su
 
 \section{Key Generation and Storage}
 
-When the server generates a unique key for the user-encryptionId, it immediately AES-encrypts it along with the users's secret. It uses the following encryptionKey for the encryption:
+When the server generates a unique key for the user-encryptionId pair, it immediately AES-encrypts it along with the users's secret. It uses the following encryptionKey for the encryption:
 
 \begin{equation}
 	encryptionKey = HMACSHA1( challenge, secret)
@@ -317,6 +317,9 @@ If the hard drive host is compromised, it could issue a decryption request to th
 
 \subsection{Client User Attacks}
 A compromised client could potentially respond to challenges programatically. The Yubikey provides a setting, where a button press is required in order to respond to a challenge, this precaution will prevent automated responses.
+
+\subsection{Key Entropy}
+In our prototype we naively implemented \( SHA(\sum key) \) by simply summing the keys together and taking the SHA hash. This potentially reduces the entropy of the key and is a potential attack vector. Future work in cleverly combining the user keys may alleviate this concern.
 
 %------------------------------------------------
 
