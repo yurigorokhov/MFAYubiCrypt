@@ -338,6 +338,11 @@ In our prototype we naively implemented \( SHA(\sum key) \) by simply summing th
 
 %------------------------------------------------
 
+\section{Future work}
+
+A security concern is the distribution of secrets. The approach of distributing pre-programmed Yubikeys, makes a good fit for distributing secrets to the user clients. However, distributing secrets to the harddrive clients present the problem of each quorum formed needing its SHA(keys) sent from the server to the harddrive client. If an attacker is to sniff this SHA(keys) he would have access to all files for that particular quorum. Further work should extend this system to provide a more sophisticated way to share this secret, perhaps also in dedicated hardware.
+
+
 \section{Conclusion}
 
 We have presented a system for distributing file access to a quorum of users. Users request to encrypt/decrypt files by sending a challenge to a server. The server distributes new challenges to the quorum of users that correspond to the encryption. Only after all participants of the quorum have responded, the server is able to generate an appropriate response to the hard drive client that can be used to decrypt the DEK (Drive Encryption Key) and ultimately the file.
