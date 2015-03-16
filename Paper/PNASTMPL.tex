@@ -94,6 +94,7 @@
 %% like extended math fonts and math commands.
 
 \usepackage{amssymb,amsfonts,amsmath}
+\usepackage{url}
 
 %------------------------------------------------
 % OPTIONAL MACRO FILES
@@ -180,7 +181,7 @@ The proposed system is composed of a user client, hard drive client and a verifi
 
 This structure allows for a distribution of the key that is needed to unlock the encrypted file in question on the harddrive client. This is ensured by having the server encrypt the key used to encrypt the actual file, with every single clients information (login credential, yubikey secret and sequence number). The actual file encryption key is reffered to as the Disk Encryptio Key (DEK). 
 
-The use of sequence numbers is essential, as if the https connection is somehow compromised, the retreived value is not static. \todo{Add more details here. Are the attacker able to use one compromised challenge-response to decrypt the file?}
+The use of sequence numbers is essential, as if the https connection is somehow compromised, the retreived value is not static.
 
 Compromising the server would not get you access to the decryption key, as it only stores the encrypted values of each clients secrets. An attacker would need to compromise the server and the clients in order to get all the information needed to decrypt the indivual keys on the server side, such that the DEK is revealed. 
 
@@ -205,6 +206,13 @@ To give a full overview of what needs to be stored in the indivual parts of the 
 
 \subsection{Multifactor authorization}
 
+Purpose of MA is to identify that the user, by providing authentication facters from at least two of three catagores \cite{MultiFactor}
+\begin{itemize}
+	\item Knowledge factors (things the user knows, e.g. password)
+	\item Possession factors (things the user has, e.g. Yubikey)
+	\item iherence factors (things the user is, e.g. fingerprint)
+\end{itemize}
+
 Yubikey is a marketed USB dongle used for various Multifactor authentication purposes. It can be set up in different modes, for One Time Password (OTP) based on a series of variables, including sequence numbers. In this work we used the Challenge-Response mode, where the Yubikey is configured with a shared Secret Key among the server and the key itself. The Secret Key is SHA-1 cryptographic hash function. 
 
 Yubikey furthermore provides a simple procedure for the user: only a physical touch on the device is necessary to allow the device to respond to the presented challenge. This is used to ensure that the response is originating from an actual person.
@@ -215,6 +223,8 @@ Furthermore, this hardware allows for a secure distribution of shared secrets, a
 \centerline{\includegraphics[width=0.3\linewidth]{images/YubiKey_Standard.png}}
 \caption{Yubikey capable of performing HMAC-SHA1 encryption with pre-programmed secret.}\label{yubikey}
 \end{figure}
+
+
 
 \section{Previous work}
 We based our model on a proposed hard drive encryption mechanism published on the Yubikey website\cite{YubikeyEncryption}. In their proposed configuration the Yubikey is programmed with a secret key after which it is able to perform HMAC-SHA1 encryption. The device is said to be operating in Challenge-Response mode since you can send it a challenge and it will respond with the HMAC-SHA1 encryption of the challenge with the secret key. This is depicted in figure~\ref{fig:challengeResponse}.
@@ -349,16 +359,21 @@ Various attack vectors on this system have been identified, with the most vulner
 
 
 \bibitem{UserLock}
-http://www.isdecisions.com/lp/userlock/userlock-windows-network-security.htm?gclid=CMfPl-rqisQCFciBfgodhxwAmQ
+\url{http://www.isdecisions.com/lp/userlock/userlock-windows-network-security.htm?gclid=CMfPl-rqisQCFciBfgodhxwAmQ}
 
 \bibitem{CLAcha1}
-http://software.dell.com/products/identity-manager-data-governance/
+\url{http://software.dell.com/products/identity-manager-data-governance/}
 
 \bibitem{YubikeyEncryption}
-https://www.yubico.com/applications/disk-encryption/full-disk-encryption/
+\url{https://www.yubico.com/applications/disk-encryption/full-disk-encryption/}
+
 
 \bibitem{YubikeySecurity}
-https://www.yubico.com/wp-content/uploads/2012/10/Security-Evaluation-v2.0.1.pdf
+\url{https://www.yubico.com/wp-content/uploads/2012/10/Security-Evaluation-v2.0.1.pdf}
+
+
+\bibitem{MultiFactor}
+\url{http://en.wikipedia.org/wiki/Multi-factor_authentication/}
 
 \end{thebibliography}
 
