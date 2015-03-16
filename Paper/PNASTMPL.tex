@@ -206,12 +206,14 @@ To give a full overview of what needs to be stored in the indivual parts of the 
 
 \subsection{Multifactor authorization}
 
-Purpose of MA is to identify that the user, by providing authentication facters from at least two of three catagores \cite{MultiFactor}
+The purpose here is to identify the user, by providing authentication facters from at least two of three catagores \cite{MultiFactor}:
 \begin{itemize}
 	\item Knowledge factors (things the user knows, e.g. password)
 	\item Possession factors (things the user has, e.g. Yubikey)
 	\item iherence factors (things the user is, e.g. fingerprint)
 \end{itemize}
+
+In this system, we address the first two factors, by password and possesion of Yubikey respectively.
 
 Yubikey is a marketed USB dongle used for various Multifactor authentication purposes. It can be set up in different modes, for One Time Password (OTP) based on a series of variables, including sequence numbers. In this work we used the Challenge-Response mode, where the Yubikey is configured with a shared Secret Key among the server and the key itself. The Secret Key is SHA-1 cryptographic hash function. 
 
@@ -335,6 +337,11 @@ A compromised client could potentially respond to challenges programatically. Th
 In our prototype we naively implemented \( SHA(\sum key) \) by simply summing the keys together and taking the SHA hash. This potentially reduces the entropy of the key and is a potential attack vector. Future work in cleverly combining the user keys may alleviate this concern.
 
 %------------------------------------------------
+
+\section{Future work}
+
+A security concern is the distribution of secrets. The approach of distributing pre-programmed Yubikeys, makes a good fit for distributing secrets to the user clients. However, distributing secrets to the harddrive clients present the problem of each quorum formed needing its SHA(keys) sent from the server to the harddrive client. If an attacker is to sniff this SHA(keys) he would have access to all files for that particular quorum. Further work should extend this system to provide a more sophisticated way to share this secret, perhaps also in dedicated hardware.
+
 
 \section{Conclusion}
 
