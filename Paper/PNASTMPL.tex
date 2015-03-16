@@ -145,9 +145,11 @@ Lars Noergaard Nielsen\affil{1}{University of California, San Diego}}
 %----------------------------------------------------------------------------------------
 
 \begin{abstract}
-In some file access schemes, it would be beneficial to only be able to decrypt a given file with the consent of a quorum of users. This paper presents a system for securely providing that functionality. Distributing this functionality over a server and multiple clients, allowing for remote consent from the formed quorum for a given file. Once the clients and server are initialized with shared secrets, no information is sent over the wire unencrypted.
+In some file access schemes, it would be beneficial to be able to decrypt a given file only with the consent of a quorum of users. This paper presents a system for securely providing that functionality. Distributing this functionality over a server and multiple clients, allowing for remote consent from the formed quorum for a given file. Once the clients and server are initialized with shared secrets, no information is sent over the wire unencrypted.
 
-The shared secret on the client side is programmed initially to dedicated hardware, a Yubikey, that provides a challenge-response interface. Basically it returns HMACSHA1 encryption of the challenge with the programmed secret. That way the server, who also knows the secret, can verify the correct response to the challenge.
+The shared secret on the client side is programmed initially to dedicated hardware, a Yubikey, that provides a challenge-response interface. Basically it returns HMACSHA1 encryption of the challenge with the programmed secret. That way the server, who also stores the secret\footnote{Encrypted with the next response from the Yubikey}, can verify the correct response to the challenge.
+
+\todo{write in the attack vectors}
 
 \end{abstract}
 
@@ -214,6 +216,8 @@ Furthermore, this hardware allows for a secure distribution of shared secrets, a
 \caption{Yubikey capable of performing HMAC-SHA1 encryption with pre-programmed secret.}\label{yubikey}
 \end{figure}
 
+\todo{write how password + yubikey makes it multifactor}
+
 \section{Previous work}
 We based our model on a proposed hard drive encryption mechanism published on the Yubikey website\cite{YubikeyEncryption}. In their proposed configuration the Yubikey is programmed with a secret key after which it is able to perform HMAC-SHA1 encryption. The device is said to be operating in Challenge-Response mode since you can send it a challenge and it will respond with the HMAC-SHA1 encryption of the challenge with the secret key. This is depicted in figure~\ref{fig:challengeResponse}.
 
@@ -223,7 +227,7 @@ We based our model on a proposed hard drive encryption mechanism published on th
 \caption{Challenge-Response mode of Yubikey.}\label{fig:challengeResponse}
 \end{figure}
 
-Figure 2 shows how this mode is used for encrypting a local hard drive. The hard drive is encrypted with a Drive Encryption Key (DEK) which is stored in a table along with the secret. Both are encrypted using AES. The key used for the encryption is shown in Figure 2. Once the user enters his password a challenge is generated. The challenge consists of the password itself and a sequence number (Seq) that is also stored in the table. This challenge is sent to the Yubikey, whose response allows us to decrypt the DEK and the secret. The hard drive can now be decrypted. After decryption the DEK is re-encrypted with a new sequence number and the secret.
+Figure \ref{fig:harddriveEncryption} shows how this mode is used for encrypting a local hard drive. The hard drive is encrypted with a Drive Encryption Key (DEK) which is stored in a table along with the secret. Both are encrypted using AES. The key used for the encryption is shown in Figure 2. Once the user enters his password a challenge is generated. The challenge consists of the password itself and a sequence number (Seq) that is also stored in the table. This challenge is sent to the Yubikey, whose response allows us to decrypt the DEK and the secret. The hard drive can now be decrypted. After decryption the DEK is re-encrypted with a new sequence number and the secret.
 
 \begin{figure}[h]
 \centerline{\includegraphics[width=1\linewidth]{HardDriveEncryptionFigure.pdf}}
@@ -319,6 +323,12 @@ If the hard drive host is compromised, it could issue a decryption request to th
 A compromised client could potentially respond to challenges programatically. The Yubikey provides a setting, where a button press is required in order to respond to a challenge, this precaution will prevent automated responses.
 
 %------------------------------------------------
+
+\section{Future work}
+
+A security concern is the distribution of secrets. The approach of distributing pre-programmed Yubikeys, makes a good fit for distributing secrets to the user clients. However, distributing secrets to the harddrive clients present the problem of each quorum formed needing its SHA(keys) sent from the server to the harddrive client. If an attacker is to sniff this SHA(keys) he would have access to all files for that particular quorum. Further work should extend this system to provide a more sophisticated way to share this secret, perhaps also in dedicated hardware.
+
+
 
 \section{Conclusion}
 
