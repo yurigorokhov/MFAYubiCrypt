@@ -33,13 +33,18 @@ namespace MFAYubiCryptServer {
 				if(challenge == null) {
 					return string.Empty;
 				}
-				return Response.AsJson(new { Id = challenge.Id, Challenge = challenge.Challenge });
+				return Response.AsJson(new { Id = challenge.Id, Challenge = challenge.Challenge, EncryptionId = challenge.EncryptionId });
 			};
 
 			Post ["/api/challenge/{responseid}"] = parameters => {
 				using (var ms = new MemoryStream()) {
 					Request.Body.CopyTo(ms);
-					_challengeBL.RespondToChallenge(parameters["responseid"], ms.ToArray());
+					var keyString = Encoding.UTF8.GetString(ms.ToArray());
+					var key = new byte[20];
+					for (int i = 0, j = 0; i < 20; i++, j += 2) {
+						key[i] = Convert.ToByte(keyString.Substring(j, 2), 16);
+					}
+					_challengeBL.RespondToChallenge(parameters["responseid"], key);
 				}
 				return string.Empty;
 			};

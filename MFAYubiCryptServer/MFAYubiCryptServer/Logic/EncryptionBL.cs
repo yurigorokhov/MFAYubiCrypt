@@ -87,13 +87,17 @@ namespace MFAYubiCryptServer {
 				var encryptionId = responsesById [id].Split (new [] { '_' })[0];
 				var response = responsesById [id].Split (new [] { '_' })[1];
 				var encrypt = _session.GetById (encryptionId);
-				keys.Add(Cryptography.Cryptography.Decrypt (encrypt.EncryptedKey, response).Split(new [] {':'})[0]);
+				var decrypted = Cryptography.Cryptography.Decrypt (encrypt.EncryptedKey, response).Split (new [] { ':' }) [0];
+				if (string.IsNullOrEmpty (decrypted)) {
+					return null;
+				}
+				keys.Add(decrypted);
 			}
 			return SHA256 (string.Join (":", keys));
 		}
 
 		string GenerateChallenge(string encryptionId, uint userId) {
-			return SHA256(string.Format("{0}:{1}", encryptionId, userId));
+			return SHA256(string.Format("{0}:{1}", encryptionId, userId)).Substring(0, 10);
 		}
 
 		public static string HMACSHA1(string value, string keyString) {
@@ -105,7 +109,7 @@ namespace MFAYubiCryptServer {
 				key[i] = Convert.ToByte(keyString.Substring(j, 2), 16);
 			}
 			var myhmacsha1 = new HMACSHA1 (key);
-			var byteArray = Encoding.ASCII.GetBytes (value);
+			var byteArray = Encoding.UTF8.GetBytes (value);
 			var stream = new MemoryStream (byteArray);
 			return myhmacsha1.ComputeHash (stream).Aggregate("", (s, e) => s + String.Format("{0:x2}",e), s => s );
 		}
