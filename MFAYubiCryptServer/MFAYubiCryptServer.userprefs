@@ -1,26 +1,27 @@
 ﻿<Properties StartupItem="MFAYubiCryptServer/MFAYubiCryptServer.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MFAYubiCryptServer/YubiCryptService.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="EncryptionTests/Test.cs">
     <Files>
       <File FileName="MFAYubiCryptServer/Data/MysqlDataStore.cs" Line="1" Column="1" />
       <File FileName="MFAYubiCryptServer/Data/IDataStore.cs" Line="1" Column="1" />
       <File FileName="MFAYubiCryptServer/Logic/IUserBL.cs" Line="1" Column="1" />
       <File FileName="MFAYubiCryptServer/Logic/UserBL.cs" Line="1" Column="1" />
       <File FileName="MFAYubiCryptServer/YubiCryptService.cs" Line="1" Column="1" />
-      <File FileName="MFAYubiCryptServer/Logic/EncryptionBL.cs" Line="5" Column="5" />
-      <File FileName="MFAYubiCryptServer/Logic/IEncryptionBL.cs" Line="3" Column="3" />
+      <File FileName="MFAYubiCryptServer/Logic/EncryptionBL.cs" Line="1" Column="1" />
+      <File FileName="MFAYubiCryptServer/Logic/IEncryptionBL.cs" Line="1" Column="1" />
       <File FileName="MFAYubiCryptServer/Cryptography.cs" Line="1" Column="1" />
-      <File FileName="MFAYubiCryptServer/Bootstrapper.cs" Line="5" Column="5" />
+      <File FileName="MFAYubiCryptServer/Bootstrapper.cs" Line="1" Column="1" />
       <File FileName="MFAYubiCryptServer/Logic/ChallengeBL.cs" Line="1" Column="1" />
-      <File FileName="MFAYubiCryptServer/Logic/IChallengeBL.cs" Line="65" Column="65" />
-      <File FileName="MFAYubiCryptServer/Entities/ChallengeEntity.cs" Line="18" Column="18" />
+      <File FileName="MFAYubiCryptServer/Logic/IChallengeBL.cs" Line="1" Column="1" />
+      <File FileName="MFAYubiCryptServer/Entities/ChallengeEntity.cs" Line="1" Column="1" />
+      <File FileName="EncryptionTests/Test.cs" Line="4" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/Logic/ChallengeBL.cs" line="39" column="1" />
       <Breakpoint file="/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/Logic/ChallengeBL.cs" line="36" column="1" />
-      <Breakpoint file="/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/YubiCryptService.cs" line="40" column="1" />
+      <Breakpoint file="/Users/yurig/Workspace/MFAYubiCrypt/MFAYubiCryptServer/MFAYubiCryptServer/Logic/EncryptionBL.cs" line="101" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

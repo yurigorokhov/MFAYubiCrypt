@@ -1,4 +1,9 @@
 *~
 bin/
 obj/
+Paper/*.aux
+Paper/*.log
+Paper/*.pdf
+Paper/*.synctex.gz
+Paper/*.tex
 

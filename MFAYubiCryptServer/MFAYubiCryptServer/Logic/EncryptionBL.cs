@@ -96,8 +96,15 @@ namespace MFAYubiCryptServer {
 			return SHA256(string.Format("{0}:{1}", encryptionId, userId));
 		}
 
-		string HMACSHA1(string value, string key) {
-			var myhmacsha1 = new HMACSHA1 (Encoding.UTF8.GetBytes(key));
+		public static string HMACSHA1(string value, string keyString) {
+			if (keyString.Length < 40) {
+				throw new ArgumentException ("Secret too short");
+			}
+			var key = new byte[20];
+			for (int i = 0, j = 0; i < 20; i++, j += 2) {
+				key[i] = Convert.ToByte(keyString.Substring(j, 2), 16);
+			}
+			var myhmacsha1 = new HMACSHA1 (key);
 			var byteArray = Encoding.ASCII.GetBytes (value);
 			var stream = new MemoryStream (byteArray);
 			return myhmacsha1.ComputeHash (stream).Aggregate("", (s, e) => s + String.Format("{0:x2}",e), s => s );
