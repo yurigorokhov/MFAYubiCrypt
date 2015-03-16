@@ -129,7 +129,7 @@ int _tmain(int argc, char *argv[])
 
 	}
 */		//printf("%s", argv[1]);
-	int size_of_input = 64;//sizeof(argv[1]);
+	int size_of_input = 10;//sizeof(argv[1]);
 //	printf("\n Size of input: %d", size_of_input);
 
 	yk.openKey();
