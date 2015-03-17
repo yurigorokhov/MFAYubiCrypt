@@ -152,7 +152,7 @@ The shared secret on the client side is programmed initially to dedicated hardwa
 
 The system is then designed in such a way, that the secrets are newer stored unencrypted on either the server or the clients, making attacks on these only possible by sniffing in-memory at the short time the secret is held for the purpose of re-encrypting for the next sequence. Thereby an attacker compromising the server or the user alone, wont be able to decrypt any files. 
 
-\todo{add parts from the conclusion}
+The two most noticable attack vectors identified, are when keys are held in-memory and the point of distribution of the secrets to clients.
 
 \end{abstract}
 
@@ -171,16 +171,14 @@ The system is then designed in such a way, that the secrets are newer stored une
 
 \section{Introduction}
 
-\dropcap{Q}uorum \( \rightarrow \) the minimum number of members of an assembly or society that must be present at any of its meetings to make the proceedings of that meeting valid.
+%\dropcap{Q}uorum \( \rightarrow \) the minimum number of members of an assembly or society that must be present at any of its meetings to make the proceedings of that meeting valid.
 
-\todo{Add that this system ought to be used on sensitive data. Survalliance society + concrete facts and data to support this claim.}
+
+\dropcap{P}rotecting information on a computer storage device against unauthorized access, even when the storage device or the computer itself is stolen or compromised by an attacker is a challeging task.
 
 Controlling who has access to files is often a requirement in industry and various other contexts. Systems for dealing with information that only is accessible with multiple people's consent is therefore interesting to investigate. Software for file access control purposes include Dell Identity Manager\cite{CLAcha1}, User Lock Access Manager \cite{UserLock} and native OS support such as an Access Control List. These systems often do not provide the access control granularity we require. Furthermore it is common for these systems to administer access centrally by an administrator. We propose an approach were users actively set file permissions by agreeing to encrypt files by their common consent, only allowing access to these files when all parties have responded to the access request. This is additionally secured by MultiFactor Authentication. Whether the proposed system is used to encrypt a single file, folder or whole hard drive, the same approach is valid.\newline
 
-\todo{rewrite following to reflect new structure -- minus Hereafter, lastly}
-The following section present the proposed system. Hereafter a section on previous work that our effort is based on. Lastly a security evaluation of the system including possible attack vectors.
-
-
+The following section presents previous work this paper is based on. The second section describes the proposed system. A walkthrough of the Encryption scheme is the third section. The fourth section evaluates the security of the system.
 
 \section{Previous work}
 We based our model on a proposed hard drive encryption mechanism published on the Yubikey website\cite{YubikeyEncryption}. In their proposed configuration the Yubikey is programmed with a secret key after which it is able to perform HMAC-SHA1 encryption. The device is said to be operating in Challenge-Response mode since you can send it a challenge and it will respond with the HMAC-SHA1 encryption of the challenge with the secret key. This is depicted in figure~\ref{fig:challengeResponse}.
