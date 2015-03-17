@@ -473,10 +473,10 @@ of the National Academy of Sciences of the United States of America}
 \newcounter {subparagraph}[paragraph]
 \renewcommand \thepart {\@Roman\c@part}
 \renewcommand \thesection {\@arabic\c@section}
-\renewcommand\thesubsection   {\thesection.\@arabic\c@subsection}
-\renewcommand\thesubsubsection{\thesubsection .\@arabic\c@subsubsection}
-\renewcommand\theparagraph    {\thesubsubsection.\@arabic\c@paragraph}
-\renewcommand\thesubparagraph {\theparagraph.\@arabic\c@subparagraph}
+\renewcommand\thesubsection   {\thesection\@arabic\c@subsection}
+\renewcommand\thesubsubsection{\thesubsection \@arabic\c@subsubsection}
+\renewcommand\theparagraph    {\thesubsubsection\@arabic\c@paragraph}
+\renewcommand\thesubparagraph {\theparagraph\@arabic\c@subparagraph}
 \newcommand\part{%
    \if@noskipsec \leavevmode \fi
    \par
@@ -567,10 +567,14 @@ of the National Academy of Sciences of the United States of America}
                                    {-10pt \@plus -1ex \@minus -.2ex}%
                                    {.5ex }%
                                    {\normalfont\Large\bfseries\sectionfont}}
-\newcommand\subsection{\@startsection{subsection}{2}{\z@}%
-                                     {10pt\@plus 1ex \@minus .2ex}%
-                                     {-0.5ex \@plus .2ex}%
-                                     {\normalfont\large\bfseries\subsectionfont}}
+\newcommand\subsection{\@startsection {subsection}{1}{\z@}%
+                                   {-10pt \@plus -1ex \@minus .2ex}%
+                                   {.2ex }%
+                                   {\normalfont\large\bfseries\subsectionfont}}
+%\newcommand\subsection{\@startsection{subsection}{2}{\z@}%
+%                                     {10pt\@plus 1ex \@minus .2ex}%
+%                                     {-0.5ex \@plus .2ex}%
+%                                     {\normalfont\large\bfseries\subsectionfont}}
 \newcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
                                      {-3.25ex\@plus -1ex \@minus -.2ex}%
                                      {1.5ex \@plus .2ex}%

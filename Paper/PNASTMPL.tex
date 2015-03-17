@@ -187,8 +187,8 @@ We based our model on a proposed hard drive encryption mechanism published on th
 
 
 \begin{figure}[h]
-\centerline{\includegraphics[width=0.7\linewidth]{ChallengeResponseFigure.pdf}}
-\caption{Challenge-Response mode of Yubikey.}\label{fig:challengeResponse}
+\centerline{\includegraphics[width=0.9\linewidth]{ChallengeResponseFigure.pdf}}
+\caption{Challenge-Response mode of Yubikey. Figure from \cite{YubikeyEncryption}}\label{fig:challengeResponse}
 \end{figure}
 
 Figure \ref{fig:harddriveEncryption} shows how Challenge-Response mode is used for encrypting a local hard drive. The hard drive is encrypted with a Drive Encryption Key (DEK) which is stored in a table along with the secret. Both are encrypted using AES. The key used for the encryption is shown in figure 2. Once the user enters his password a challenge is generated. The challenge consists of the password itself and a sequence number (seq) which is also stored in the table. This challenge is sent to the Yubikey, whose response allows for decryption of the DEK and the secret. The hard drive can now be decrypted. After decryption the DEK is re-encrypted with a new sequence number and the secret.
@@ -307,7 +307,7 @@ The hard drive client now decrypts the DEK and the hard drive. Immediately, it r
 
 We evaluate the security of the proposed system by considering various attack vectors. We leave the evaluation of specific encryption and hashing mechanisms to other work, and assume them to be computationally unreasonably hard to break. We also do not evaluate the security implications of specifically using the Yubikey product, Yubico provides a detailed evaluation on their website \cite{YubikeySecurity}. 
 
-\subsection{Server Attacks}\hspace*{\fill} \\
+\subsection{Server Attacks}
 In designing the server side component we took deliberate care not to expose enough information to compromise the security of the hard drive at any point in the future. The database on the server stores the following items:
 \begin{itemize}
 	\item Yubikey secret of each user (AES encrypted)
@@ -319,7 +319,7 @@ In order to decrypt the secret or the key, the attacker would need to gain acces
 
 A more elaborate attack that successfully takes over the server software may send out challenges to a population of users in an attempt to gain their responses. If such an attack were to be successful, the attacker would gain access to the \( SHA( \sum Keys)) \). This would break the encryption mechanism. Such an attack is difficult to orchestrate, as it would require full control of the server and a physical key press from all the users that were tricked by the illegitimate decryption request. Further precautions could be taken to prevent this, such as the signing of challenges.
 
-\subsection{Network Attacks}\hspace*{\fill} \\
+\subsection{Network Attacks}
 All communications are assumed to be SSL encrypted in a production environment to provide the first layer of security. With that in mind, let us consider what data is sent over the network during the decryption process.
 
 \subsubsection{Between Client and Server}
@@ -334,13 +334,13 @@ The challenge and the response leak no information, nor are they useful in a fut
 \subsubsection{Between Server and Users}
 Between the server and users, only challenges and responses are exchanged over the wire. These change every request due to per-user sequence numbers thus intercepting these would not lead to future vulnerabilities.
 
-\subsection{Hard drive client attacks}\hspace*{\fill} \\
+\subsection{Hard drive client attacks}
 If the hard drive client is compromised, it could issue a decryption request to the server. For this attack vector to work, all the users would need to respond to the challenges. Without the server's approval the attacker would not gain access to the DEK. If the hard drive client is compromised during a legitimate decryption, it could also obtain the DEK by reading it from the program's memory, we consider such an attack very difficult to mount.
 
-\subsection{Client User Attacks}\hspace*{\fill} \\
+\subsection{Client User Attacks}
 A compromised client could potentially respond to challenges programatically. The Yubikey provides a setting, where a button press is required in order to respond to a challenge, this precaution will prevent automated responses.
 
-\subsection{Key Entropy}\hspace*{\fill} \\
+\subsection{Key Entropy}
 In our prototype we naively implemented \( SHA(\sum key) \) by simply summing the keys together and taking the SHA hash. This potentially reduces the entropy of the key and is a potential attack vector. Future work in cleverly combining the user keys may alleviate this concern.
 
 %------------------------------------------------
@@ -389,6 +389,7 @@ Various attack vectors on this system have been identified, with the most vulner
 
 \bibitem{MultiFactor}
 \url{http://en.wikipedia.org/wiki/Multi-factor_authentication/}
+
 
 \end{thebibliography}
 
