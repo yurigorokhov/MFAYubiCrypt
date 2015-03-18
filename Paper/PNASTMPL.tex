@@ -71,6 +71,10 @@
 \usepackage{float}
 \usepackage{todo}
 
+\newcommand*{\permcomb}[4][0mu]{{{}^{#3}\mkern#1#2_{#4}}}
+\newcommand*{\perm}[1][-3mu]{\permcomb[#1]{P}}
+\newcommand*{\comb}[1][-1mu]{\permcomb[#1]{C}}
+
 %------------------------------------------------
 % OPTIONAL POSTSCRIPT FONT FILES
 %------------------------------------------------
@@ -146,13 +150,8 @@ Lars Noergaard Nielsen\affil{1}{University of California, San Diego}}
 %----------------------------------------------------------------------------------------
 
 \begin{abstract}
-In some file access schemes, it would be beneficial to be able to decrypt a given file only with the consent of a quorum of users. This paper presents a system for securely providing that functionality. Distributing this functionality over a server and multiple clients, allowing for remote consent from the formed quorum for a given file. Once the clients and server are initialized with shared secrets, no information is sent over the wire unencrypted, preventing MIM\footnote{Man In the Middle} attacks.
-
-The shared secret on the client side is programmed initially to dedicated hardware, a Yubikey, that provides a challenge-response interface. Basically it returns HMACSHA1 encryption of the challenge with the programmed secret. That way the server, who also stores the secret\footnote{Encrypted with the next response from the Yubikey}, can verify the correct response to the challenge. Given responses from all clients in the quorum, it forwards the SHA of these to the client actually hosting the file, in order to decrypt it.
-
-The system is then designed in such a way, that the secrets are newer stored unencrypted on either the server or the clients, making attacks on these only possible by sniffing in-memory at the short time the secret is held for the purpose of re-encrypting for the next sequence. Thereby an attacker compromising the server or the user alone, wont be able to decrypt any files. 
-
-The two most noticable attack vectors identified, are when keys are held in-memory and the point of distribution of the secrets to clients.
+This paper presents a system for securely decrypting a file with the consent of a quorum of users. This functionality is distributed over a server and multiple clients, allowing consent from the formed quorum to be provided remotely. Users provide consent through the use of a Yubikey device. The Yubikey is a physical USB device that is equipped with encryption capabilities and operates in challenge-response mode.
+The system is designed in such a way, that the secrets are never stored unencrypted on either the server or the clients, nor are they exposed over network communications. Thereby an attacker compromising the server or the user alone, will not be able to decrypt any files. The word quorum is used liberally, as the system requires all members to be present during decryption. However we do provide a methodology for allowing a predefined subset of users to perform the decryption.
 
 \end{abstract}
 
@@ -174,14 +173,14 @@ The two most noticable attack vectors identified, are when keys are held in-memo
 %\dropcap{Q}uorum \( \rightarrow \) the minimum number of members of an assembly or society that must be present at any of its meetings to make the proceedings of that meeting valid.
 
 
-\dropcap{P}rotecting information on a computer storage device against unauthorized access, even when the storage device or the computer itself is stolen or compromised by an attacker is a challeging task.
+\dropcap{P}rotecting information on a computer storage device against unauthorized access, even when the storage device or the computer itself is stolen or compromised by an attacker is a challenging task.
 
-Controlling who has access to files is often a requirement in industry and various other contexts. Systems for dealing with information that only is accessible with multiple people's consent is therefore interesting to investigate. Software for file access control purposes include Dell Identity Manager\cite{CLAcha1}, User Lock Access Manager \cite{UserLock} and native OS support such as an Access Control List. These systems often do not provide the access control granularity we require. Furthermore it is common for these systems to administer access centrally by an administrator. We propose an approach were users actively set file permissions by agreeing to encrypt files by their common consent, only allowing access to these files when all parties have responded to the access request. This is additionally secured by MultiFactor Authentication. Whether the proposed system is used to encrypt a single file, folder or whole hard drive, the same approach is valid.\newline
+Fine-grained control over who has access to files is often a requirement in industry and various other contexts. Systems for dealing with information that only is accessible with multiple people's consent is therefore interesting to investigate. Software for file access control purposes include Dell Identity Manager\cite{CLAcha1}, User Lock Access Manager \cite{UserLock} and native OS support such as an Access Control List. These systems often do not provide the access control granularity we require. Furthermore it is common for these systems to administer access centrally by an administrator. We propose an approach were users actively set file permissions by agreeing to encrypt files by their common consent, only allowing access to these files when all parties have responded to the access request. This is additionally secured by MultiFactor Authentication. Whether the proposed system is used to encrypt a single file, folder or whole hard drive, the same approach is valid.\newline
 
 The following section presents previous work this paper is based on. The second section describes the proposed system. A walkthrough of the Encryption scheme is the third section. The fourth section evaluates the security of the system.
 
 \section{Previous work}
-We based our model on a proposed hard drive encryption mechanism published on the Yubikey website\cite{YubikeyEncryption}. In their proposed configuration the Yubikey is programmed with a secret key after which it is able to perform HMAC-SHA1 encryption. The device is said to be operating in Challenge-Response mode since you can send it a challenge and it will respond with the HMAC-SHA1 encryption of the challenge with the secret key. This is depicted in figure~\ref{fig:challengeResponse}.
+We based our model on a previously proposed hard drive encryption mechanism published on the Yubikey website\cite{YubikeyEncryption}. In their proposed configuration the Yubikey is programmed with a secret key after which it is able to perform HMAC-SHA1 encryption. The device is said to be operating in Challenge-Response mode since you can send it a challenge and it will respond with the HMAC-SHA1 encryption of the challenge with the secret key. This is depicted in figure~\ref{fig:challengeResponse}.
 
 
 \begin{figure}[h]
@@ -199,13 +198,11 @@ Figure \ref{fig:harddriveEncryption} shows how Challenge-Response mode is used f
 
 \section{System Description}
 
-The proposed system is composed of serveral user clients, hard drive client and a verification server. The user clients forms a quorum that can respond to requests from hard drive clients to unlock files. The basic idea is for server and user clients to be instantiated with a shared secret, see figure ~\ref{fig:basicSystemFigure}.
+The proposed system is composed of several user clients, a hard drive client and a verification server. The user clients form a quorum that can respond to requests from hard drive clients to unlock files. At a high level, the server and user clients are instantiated with a shared secret, see figure ~\ref{fig:basicSystemFigure}.
 
-This structure allows for a distribution of the key that is needed to unlock the encrypted file in question on the hard drive client. This is ensured by having the server encrypt the key used to encrypt the actual file, with every single users information (login credential, Yubikey secret and sequence number). The actual file encryption key are reffered to as the Disk Encryptio Key (DEK). 
+The server keeps the DEK (Disk Encryption Key) locally, in an encrypted form. A challenge-response process with the server is necessary for proper decryption; this process can only occur when all users of the quorum participate. To randomize the challenge-response communications we propose the use of sequence numbers, such that if the encrypted connection is somehow compromised, the compromised value cannot be used in future decryption attempts.
 
-The use of sequence numbers is essential, as if the https connection is somehow compromised, the retreived value is not static.
-
-Compromising the server would not get the attacker access to the decryption key, as it only stores the encrypted values of each clients secrets. An attacker would need to compromise the server and the clients in order to get all the information needed to decrypt the indivual keys on the server side, such that the DEK is revealed. 
+Compromising the server would not allow the attacker access to the decryption key, as it only stores the encrypted values of each user's secret. 
 
 A benefit from this central point of control is that the server can deny access to a file, even though participants grant access, which might be useful in some access schemes.
 \begin{figure}[h]
@@ -217,27 +214,27 @@ A benefit from this central point of control is that the server can deny access 
 \caption{System components and interaction. 4 major steps to grant access.}\label{fig:systemfigure}
 \end{figure}
 
-Figure \ref{fig:systemfigure} describes the steps involved with decrypting a file, with a quorum of three clients. Essential to this system are that at no point is the actual DEK sent over the network. Transmisson happens only in encrypted form with sequence numbers adding entropy. This is achieved by HMAC-SHA1 encryption of the exchanged data, with the shared secrets.
+Figure \ref{fig:systemfigure} describes the steps involved with decrypting a file, with a quorum of three clients. Essential to this system are that at no point is the actual DEK sent over the network. Transmission happens only in encrypted form with sequence numbers adding entropy. This is achieved by HMAC-SHA1 encryption of the exchanged data, with the shared secrets.
 
-To give a full overview of what needs to be stored in the indivual parts of the system, figure \ref{fig:detailedsystemfigure} shows a configuration with three user clients.
+To give a full overview of what needs to be stored in the individual parts of the system, figure \ref{fig:detailedsystemfigure} shows a configuration with three user clients.
 
 \begin{figure}[h]
 \centerline{\includegraphics[width=1\linewidth]{images/DetailedSystem.pdf}}
 \caption{System with needed variables}\label{fig:detailedsystemfigure}
 \end{figure}
 
-\subsection{Multifactor authorization}
+\subsection{Multi-factor authorization}
 
-The purpose here is to identify the user, by providing authentication facters from at least two of three catagores \cite{MultiFactor}:
+The purpose here is to identify the user, by providing authentication factors from at least two of three categories \cite{MultiFactor}:
 \begin{itemize}
 	\item Knowledge factors (things the user knows, e.g. password)
 	\item Possession factors (things the user has, e.g. Yubikey)
 	\item Inherence factors (things the user is, e.g. fingerprint)
 \end{itemize}
 
-In this system, we address the first two factors, by password and possesion of Yubikey respectively.
+In this system, we address the first two factors, through the use of a password and the possession of a Yubikey device respectively.
 
-Yubikey is a marketed USB dongle used for various Multifactor authentication purposes. It can be set up in different modes, for One Time Password (OTP) based on a series of variables, including sequence numbers. In this work we used the Challenge-Response mode, where the Yubikey is configured with a shared Secret Key among the server and the Yubikey itself. The Secret Key is a SHA-1 cryptographic hash function. 
+Yubikey is a marketed USB dongle used for various Multi-factor authentication purposes. It can be set up in different modes, for One Time Password (OTP) based on a series of variables, including sequence numbers. In this work we used the Challenge-Response mode, where the Yubikey is configured with a shared Secret Key among the server and the Yubikey itself. The Secret Key is a SHA-1 cryptographic hash function. 
 
 Yubikey furthermore provides a simple procedure for the user: only a physical touch on the device is necessary to allow the device to respond to the presented challenge. This is used to ensure that the response is originating from an actual person.
 
@@ -301,6 +298,10 @@ The user responds with \( HMACSHA1( challenge, secret) \) using their Yubikey. T
 
 The hard drive client now decrypts the DEK and the hard drive. Immediately, it re-encrypts the DEK with an incremented sequence number.
 
+\section{Rediscovering the Quorum}
+
+Thus far we have described a system in which all users need to be present for the decryption to occur. A true quorum would mean that a predefined subset of users could perform a successful decryption. We can extend the proposed system by duplicating the encryption of the DEK for each valid user subset. In a situation where out of \( n \) users, any \( k \) users could perform a decryption a total of \( \comb{n}{k} \) DEK encryptions would need to stored.
+
 \section{Security Evaluation}
 
 We evaluate the security of the proposed system by considering various attack vectors. We leave the evaluation of specific encryption and hashing mechanisms to other work, and assume them to be computationally unreasonably hard to break. We also do not evaluate the security implications of specifically using the Yubikey product, Yubico provides a detailed evaluation on their website \cite{YubikeySecurity}. 
@@ -313,12 +314,12 @@ In designing the server side component we took deliberate care not to expose eno
 	\item Mapping of hard drive to users who belong to the encryption
 	\item Sequence number used for obfuscation
 \end{itemize}
-In order to decrypt the secret or the key, the attacker would need to gain access to the user's secret in order to be able to generate the decryption key via a HMAC-SHA1 algorithm. While the server does not provide any additional protection if the user secret has been compromised, it does not make matters any worse. Furthermore, all users of a particular hard drive would need to be compromised in this way for a successful decryption. This is analogous to discovering everyone's password in standard authentication, which in this case is stored on their YubiKey device.
+In order to decrypt the secret or the key, the attacker would need to gain access to the user's secret in order to be able to generate the decryption key via a HMAC-SHA1 algorithm. While the server does not provide any additional protection if the user secret has been compromised, it does not make matters any worse. Furthermore, all users of a particular hard drive would need to be compromised in this way for a successful decryption. This is analogous to discovering everyone's password in standard authentication, which in this case is stored on their Yubikey device.
 
 A more elaborate attack that successfully takes over the server software may send out challenges to a population of users in an attempt to gain their responses. If such an attack were to be successful, the attacker would gain access to the \( SHA( \sum Keys)) \). This would break the encryption mechanism. Such an attack is difficult to orchestrate, as it would require full control of the server and a physical key press from all the users that were tricked by the illegitimate decryption request. Further precautions could be taken to prevent this, such as the signing of challenges.
 
 \subsection{Network Attacks}
-All communications are assumed to be SSL encrypted in a production environment to provide the first layer of security. With that in mind, let us consider what data is sent over the network during the decryption process.
+All communications are assumed to be a encrypted in a production environment to provide the first layer of security. With that in mind, let us consider what data is sent over the network during the decryption process.
 
 \subsubsection{Between Client and Server}
 When the client initiates a decryption, it sends over an \textbf{encryptionId} and a challenge. The encryptionId which is used to identify the hard drive and associated users. The challenge is a SHA hash of the encryptionId, a sequence number (seq), and an optional password. Finally, the server will answer with a response.
@@ -332,27 +333,27 @@ The challenge and the response leak no information, nor are they useful in a fut
 \subsubsection{Between Server and Users}
 Between the server and users, only challenges and responses are exchanged over the wire. These change every request due to per-user sequence numbers thus intercepting these would not lead to future vulnerabilities.
 
-\subsection{Hard drive client attacks}
-If the hard drive client is compromised, it could issue a decryption request to the server. For this attack vector to work, all the users would need to respond to the challenges. Without the server's approval the attacker would not gain access to the DEK. If the hard drive client is compromised during a legitimate decryption, it could also obtain the DEK by reading it from the program's memory, we consider such an attack very difficult to mount.
+\subsection{Hard-drive client attacks}
+If the hard-drive client is compromised, it could issue a decryption request to the server. For this attack vector to work, all the users would need to respond to the challenges. Without the server's approval the attacker would not gain access to the DEK. If the hard-drive client is compromised during a legitimate decryption, it could also obtain the DEK by reading it from the program's memory, we consider such an attack very difficult to mount.
 
 \subsection{Client User Attacks}
 A compromised client could potentially respond to challenges programatically. The Yubikey provides a setting, where a button press is required in order to respond to a challenge, this precaution will prevent automated responses.
-
-\subsection{Key Entropy}
-In our prototype we naively implemented \( SHA(\sum key) \) by simply summing the keys together and taking the SHA hash. This potentially reduces the entropy of the key and is a potential attack vector. Future work in cleverly combining the user keys may alleviate this concern.
 
 %------------------------------------------------
 
 \section{Future work}
 
-A security concern is the distribution of secrets. The approach of distributing pre-programmed Yubikeys, makes a good fit for distributing secrets to the user clients. However, distributing secrets to the hard drive clients presents the problem of each quorum formed needing its SHA(keys) sent from the server to the hard drive client. If an attacker is to sniff this SHA(keys) he would have access to all files for that particular quorum. Further work should extend this system to provide a more sophisticated way to share this secret, perhaps also in dedicated hardware. An approach could be to have the server and hard drive client sign their messages between each other. \todo{Yuri, will you add something to your idea?}
+A security concern is the distribution of secrets. The approach of distributing pre-programmed Yubikeys, makes a good fit for distributing secrets to the user clients. However, distributing secrets to the hard-drive clients presents the problem of each quorum formed needing its SHA(keys) sent from the server to the hard-drive client. If an attacker is to sniff this SHA(keys) he would have access to all files for that particular quorum. Further work could extend this system to provide a more sophisticated way to share this secret, perhaps in dedicated hardware.
 
+In our prototype we naively implemented \( SHA(\sum key) \) by simply summing the keys together and taking the SHA hash. This potentially reduces the entropy of the key and is a potential attack vector. Future work in cleverly combining the user keys may alleviate this concern.
+
+The use of sequence numbers proposed in this work is not the most secure approach. A better alternative would be to use a random 'salt' value during the encryption process. This would reduce the predictability of the challenge-response values.
 
 \section{Conclusion}
 
-We have presented a system for distributing file access to a quorum of users. Users request to encrypt/decrypt files by sending a challenge to a server. The server distributes new challenges to the quorum of users that correspond to the encryption. Only after all participants of the quorum have responded, the server is able to generate the SHA(Keys) to the hard drive client that can be used to decrypt the DEK (Drive Encryption Key) and ultimately the file.
+We have presented a system for distributing file access to a quorum of users. Users request to encrypt/decrypt files by sending a challenge to a server. The server distributes new challenges to the quorum of users that correspond to the encryption. Only after all participants of the quorum have responded, the server is able to generate the SHA(Keys) to the hard-drive client that can be used to decrypt the DEK (Drive Encryption Key) and ultimately the file.
 
-Various attack vectors on this system have been identified, with the most vulnerable points being whenever the actual sum of all quorum keys are held in memory. This happens for a short while on both the server and the hard drive client. In both cases, this value is quickly re-encrypted again with an incremented sequence number. Also, during the initialization process, the shared secrets are temporarily vulnerable, which can be alleviated by shipping these in pre-programmed dedicated hardware devices, for instance Yubikeys.
+Various attack vectors on this system have been identified, with the most vulnerable points being whenever the actual sum of all quorum keys are held in memory. This happens for a short while on both the server and the hard-drive client. In both cases, this value is quickly re-encrypted again with an incremented sequence number. Also, during the initialization process, the shared secrets are temporarily vulnerable, which can be alleviated by shipping these in pre-programmed dedicated hardware devices, for instance Yubikeys.
 
 %----------------------------------------------------------------------------------------
 %	ACKNOWLEDGEMENTS
