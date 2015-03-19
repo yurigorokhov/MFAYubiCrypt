@@ -257,7 +257,7 @@ This sections presents the encryption scheme used, to ensure that decryption of 
 
 When a user is added to the server, secret key is assigned by the server. This key is then programmed into the Yubikey. 
 
-The hard drive client (the client program that is in charge of decrypting the drive) generates a DEK to encrypt the hard drive with. Once encrypted, a request is sent to the server to set up a quorum of users with to participate in the encryption. The server responds with an encryptionId and a secret cryptographic hash \( SHA(\sum key) \). This hash, along with the DEK are AES-encrypted and stored on the hard drive client. The key used for the encryption is calculated as follows:
+The hard drive client (the client program that is in charge of decrypting the drive) generates a DEK to encrypt the hard drive with. Once encrypted, a request is sent to the server to set up a quorum of users for which to participate in the encryption. The server responds with an encryptionId and a secret cryptographic hash \( SHA(\sum key) \). This hash, along with the DEK are AES-encrypted and stored on the hard drive client. The key used for the encryption is calculated as follows:
 \begin{equation}
 	encryptionKey = HMACSHA1( challenge, SHA(\sum key))
 \end{equation}
@@ -334,7 +334,7 @@ The challenge and the response leak no information, nor are they useful in a fut
 Between the server and users, only challenges and responses are exchanged over the wire. These change every request due to per-user sequence numbers thus intercepting these would not lead to future vulnerabilities.
 
 \subsection{Hard-drive client attacks}
-If the hard-drive client is compromised, it could issue a decryption request to the server. For this attack vector to work, all the users would need to respond to the challenges. Without the server's approval the attacker would not gain access to the DEK. If the hard-drive client is compromised during a legitimate decryption, it could also obtain the DEK by reading it from the program's memory, we consider such an attack very difficult to mount.
+If the hard-drive client is compromised, it could issue a decryption request to the server. For this attack vector to work, all the users would need to respond to the challenges. Without the server's approval the attacker would not gain access to the DEK. If the hard-drive client is compromised during a legitimate decryption, it could also obtain the DEK by reading it from the program's memory. We consider such an attack very difficult to mount.
 
 \subsection{Client User Attacks}
 A compromised client could potentially respond to challenges programatically. The Yubikey provides a setting, where a button press is required in order to respond to a challenge, this precaution will prevent automated responses.
